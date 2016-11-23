@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+settings = {
+    "student_id" : "",
+    "jwxt_password" : "",
+    "cas_password" : "",
+    "id_card" : "",
+    "login_url" : "http://cas.ecjtu.edu.cn/cas/login",
+    "headers" : {
+         'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+    "payload" : {
+        "encodedService" : "",
+        "service" : "",
+        "serviceName" : "",
+        "loginErrCnt" : "0",
+        "username" : "",
+        "password" : "",
+        "lt" : "",
+    },
+}
+
+def get(str):
+    return settings[str]

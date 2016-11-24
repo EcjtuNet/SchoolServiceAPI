@@ -20,9 +20,9 @@ def getScore():
     return json.dumps(scoreList)
 
 
-@app.route('api/v1/infoQuery', methods=['POST'])
-def getInfo():
-    return
+# @app.route('api/v1/infoQuery', methods=['POST'])
+# def getInfo():
+#     return
 
 if __name__ == '__main__':
     app.run()

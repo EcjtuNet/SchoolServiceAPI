@@ -3,6 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import config
 
 
 # 统一认证类
@@ -11,18 +12,18 @@ class Cas:
         return
 
     @classmethod
-    def get_lt_value(this, headers, login_url):
+    def get_lt_value(self, headers, login_url):
         cas_page = requests.get(login_url, headers=headers)
         soup = BeautifulSoup(cas_page.text, "lxml")
         lt_value = soup.find("input", {"name": "lt"}).get('value')
         return lt_value
 
     @classmethod
-    def get_ticket_url(this, headers, login_url, payload, encodedService, service, username, password, lt):
+    def get_ticket_url(self, headers, login_url, payload, encodedService, service, username, password, lt):
         payload["encodedService"] = encodedService
         payload['service'] = service
         payload['username'] = username
-        payload['password'] = password
+        payload['password'] = self.hash_password(self, password)
         payload['lt'] = lt
 
         ticket_page = requests.post(login_url, data=payload, headers=headers).text
@@ -31,13 +32,18 @@ class Cas:
         return ticket_url
 
     @classmethod
-    def get_login_cookie(this, ticket_url, headers):
+    def get_login_cookie(self, ticket_url, headers):
         page = requests.get(ticket_url, headers=headers, allow_redirects=False)
         return page.cookies
 
     @classmethod
-    def get_login(this, cookies , headers, info_url):
+    def get_login(self, cookies , headers, info_url):
         info_page = requests.get(info_url, cookies=cookies, headers=headers)
         return info_page.text
+
+    @staticmethod
+    def hash_password(self, password):
+        encode_password = requests.get(config.get('node_server_url'),{"password": password})
+        return encode_password
 
 # 老版教务处类

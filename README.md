@@ -8,16 +8,20 @@
 
 * 获取所有14级以后班级成员名单
 
-## TODO
-
 * 用户模型
 
-* 信息缓存
+## TODO
+
+* 用户验证操作
+
+* 用户信息存入
+
+* 查询信息缓存
 
 ## 部署方法
 
->> python deploy.py
+> python deploy.py
 
->> cd node_server;node app.js
+> cd node_server;node app.js
 
->> cd ..;python app.py
+> cd ..;python app.py

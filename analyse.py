@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from bs4 import BeautifulSoup
-import json
+import re
 from login import Cas as cas
 import config
 
@@ -65,13 +65,11 @@ def getStudentInfo():
     return
 
 
+# 获取所有班级名单
 def getStudentList(username, password):
     url = "http://jwxt.ecjtu.jx.cn/infoQuery/class_findClassList.action"
-    cookie = login_jwxt(username, password, url)
-    payload = {
-
-    }
-    html = cas.page_by_post(cookie, headers, url, payload)
+    cookie = login_jwxt(username, password)
+    html = cas.page_by_get(cookie, headers, url)
     soup = BeautifulSoup(html, "lxml")
 
     departments = soup.find_all("select",{"name": "depInfo.departMent"})[0].find_all("option")
@@ -85,9 +83,20 @@ def getStudentList(username, password):
         if(int(grade["value"])>=2015):
             gradeList.append(grade["value"])
 
+    classesList = {}
     for dep in departmentList:
         for gra in gradeList:
-            html = login_jwxt(username, password,)
+            payload = {
+                "depInfo.departMent" : dep,
+                "gra.grade" : gra,
+                "classInfo.className" : "selectClass"
+            }
+            html = cas.page_by_post(cookie, headers, "http://jwxt.ecjtu.jx.cn/infoQuery/class_findClaByDepGra.action", payload)
+            patt = re.compile(r'<option.+?>(.+?)</option>')
+            classes = patt.findall(html)[1:]
+            print classes
 
+            # classesList[dep][gra] = classes
+    # print classesList
     return
 

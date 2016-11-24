@@ -4,12 +4,20 @@
 
 * cas跳转登录智慧交大和教务系统
 
-* 从教务系统中抓取15级以后的成绩信息
+* 15级成绩查询接口
 
-* 成绩查询接口
+* 获取所有14级以后班级成员名单
 
 ## TODO
 
 * 用户模型
 
 * 信息缓存
+
+## 部署方法
+
+>> python deploy.py
+
+>> cd node_server;node app.js
+
+>> cd ..;python app.py

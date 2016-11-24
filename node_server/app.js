@@ -3,7 +3,6 @@
  */
 var http = require('http');
 var url = require('url');
-var util = require('util');
 var hex = require('./md5');
 var des = require('./des');
 var thisPwd;

@@ -37,7 +37,7 @@ def login_jwxt(info_url):
     return info_page
 
 
-def getScoreInfo(year, term):
+def getScoreInfoFor15(year, term):
     html = login_jwxt('http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action')
     print html
     year = '2015'
@@ -57,3 +57,7 @@ def getScoreInfo(year, term):
         }
         scoreInfoList.append(scoreInfo)
     return scoreInfoList
+
+def getScoreInfoFor14(year, term):
+    html = login_portal('http://')
+    return

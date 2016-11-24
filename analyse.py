@@ -1,48 +1,42 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from bs4 import BeautifulSoup
-from cas import Login as login
+from login import Cas as cas
 import config
 
 headers = config.get('headers')
 login_url = config.get('login_url')
 payload = config.get('payload')
-username  = config.get('student_id')
-password = config.get('cas_password')
 
 
 # 智慧交大
-def login_portal(info_url):
-    lt = login.get_lt_value(headers, login_url)
+def login_portal(username, password, info_url):
+    lt = cas.get_lt_value(headers, login_url)
     encodeService = "http%3a%2f%2fportal.ecjtu.edu.cn%2fdcp%2findex.jsp"
     service = "http://portal.ecjtu.edu.cn/dcp/index.jsp"
-    info_url = "http://portal.ecjtu.edu.cn/dcp/getPortalData?sPage=home&gId=null&user_id=null&cid=null&template_type=1"
 
-    ticket_url = login.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
-    login_cookie = login.get_login_cookie(ticket_url, headers)
-    info_page = login.get_login(login_cookie, headers, info_url)
+    ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
+    login_cookie = cas.get_login_cookie(ticket_url, headers)
+    info_page = cas.get_login(login_cookie, headers, info_url)
     return info_page
 
 
 # 教务系统
-def login_jwxt(info_url):
-    lt = login.get_lt_value(headers, login_url)
+def login_jwxt(username, password, info_url):
+    lt = cas.get_lt_value(headers, login_url)
     encodeService = "http%3a%2f%2fjwxt.ecjtu.jx.cn%2fstuMag%2fLogin_dcpLogin.action"
     service = "http://jwxt.ecjtu.jx.cn/stuMag/Login_dcpLogin.action"
 
-    ticket_url = login.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
-    login_cookie = login.get_login_cookie(ticket_url, headers)
-    info_page = login.get_login(login_cookie, headers, info_url)
+    ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
+    login_cookie = cas.get_login_cookie(ticket_url, headers)
+    info_page = cas.get_login(login_cookie, headers, info_url)
     return info_page
 
 
-def getScoreInfoFor15(year, term):
-    html = login_jwxt('http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action')
-    print html
-    year = '2015'
+def getScoreInfoFor15(username, password, year, term):
+    html = login_jwxt(username, password, 'http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action')
     soup = BeautifulSoup(html, "html.parser")
     originScoreInfoList = soup.find_all("ul", class_=year + '_' + term + " term_score")
-    print originScoreInfoList
 
     scoreInfoList = []
     for originScoreInfo in originScoreInfoList:
@@ -57,6 +51,13 @@ def getScoreInfoFor15(year, term):
         scoreInfoList.append(scoreInfo)
     return scoreInfoList
 
-def getScoreInfoFor14(year, term):
-    html = login_portal('http://')
+
+def getScoreInfoFor14(username, year, term):
+    return
+
+
+def getStudentInfo():
+    info_url = "http://portal.ecjtu.edu.cn/dcp/getPortalData?sPage=home&gId=null&user_id=null&cid=null&template_type=1"
+    all_info = login_portal(info_url)
+    print all_info
     return

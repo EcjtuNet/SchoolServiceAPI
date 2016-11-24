@@ -5,7 +5,8 @@ from bs4 import BeautifulSoup
 import re
 
 
-class Login:
+# 统一认证类
+class Cas:
     def __init__(self):
         return
 
@@ -38,3 +39,5 @@ class Login:
     def get_login(this, cookies , headers, info_url):
         info_page = requests.get(info_url, cookies=cookies, headers=headers)
         return info_page.text
+
+# 老版教务处类

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
 from flask import Flask, request
 import time
 import json

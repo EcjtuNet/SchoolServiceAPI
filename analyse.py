@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from bs4 import BeautifulSoup
+import json
 from login import Cas as cas
 import config
 
@@ -17,25 +18,25 @@ def login_portal(username, password, info_url):
 
     ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
     login_cookie = cas.get_login_cookie(ticket_url, headers)
-    info_page = cas.get_login(login_cookie, headers, info_url)
-    return info_page
+    return login_cookie
 
 
 # 教务系统
-def login_jwxt(username, password, info_url):
+def login_jwxt(username, password):
     lt = cas.get_lt_value(headers, login_url)
     encodeService = "http%3a%2f%2fjwxt.ecjtu.jx.cn%2fstuMag%2fLogin_dcpLogin.action"
     service = "http://jwxt.ecjtu.jx.cn/stuMag/Login_dcpLogin.action"
 
     ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
     login_cookie = cas.get_login_cookie(ticket_url, headers)
-    info_page = cas.get_login(login_cookie, headers, info_url)
-    return info_page
+    return login_cookie
 
 
 def getScoreInfoFor15(username, password, year, term):
-    html = login_jwxt(username, password, 'http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action')
-    soup = BeautifulSoup(html, "html.parser")
+    cookie = login_jwxt(username, password)
+    url = "http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action"
+    html = cas.page_by_get(cookie, headers, url)
+    soup = BeautifulSoup(html, "lxml")
     originScoreInfoList = soup.find_all("ul", class_=year + '_' + term + " term_score")
 
     scoreInfoList = []
@@ -49,6 +50,7 @@ def getScoreInfoFor15(username, password, year, term):
             'score': item[5].string
         }
         scoreInfoList.append(scoreInfo)
+
     return scoreInfoList
 
 
@@ -61,3 +63,31 @@ def getStudentInfo():
     all_info = login_portal(info_url)
     print all_info
     return
+
+
+def getStudentList(username, password):
+    url = "http://jwxt.ecjtu.jx.cn/infoQuery/class_findClassList.action"
+    cookie = login_jwxt(username, password, url)
+    payload = {
+
+    }
+    html = cas.page_by_post(cookie, headers, url, payload)
+    soup = BeautifulSoup(html, "lxml")
+
+    departments = soup.find_all("select",{"name": "depInfo.departMent"})[0].find_all("option")
+    departmentList = []
+    for department in departments:
+        departmentList.append(department["value"])
+
+    grades = soup.find_all("select", {"name": "gra.grade"})[0].find_all("option")
+    gradeList = []
+    for grade in grades:
+        if(int(grade["value"])>=2015):
+            gradeList.append(grade["value"])
+
+    for dep in departmentList:
+        for gra in gradeList:
+            html = login_jwxt(username, password,)
+
+    return
+

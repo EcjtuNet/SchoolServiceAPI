@@ -37,8 +37,13 @@ class Cas:
         return page.cookies
 
     @classmethod
-    def get_login(self, cookies , headers, info_url):
+    def page_by_get(self, cookies , headers, info_url):
         info_page = requests.get(info_url, cookies=cookies, headers=headers)
+        return info_page.text
+
+    @classmethod
+    def page_by_post(self, cookies , headers, info_url, payload):
+        info_page = requests.post(info_url, data=payload, cookies=cookies, headers=headers)
         return info_page.text
 
     @staticmethod

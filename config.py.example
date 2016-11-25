@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+settings = {
+    # 为登录教务系统获取班级名单需要账号信息进行登录
+    "student_id" : "",
+    "cas_password" : "",
+    # 运行deploy.py时若为True，会进行学生列表爬取(只包含基本姓名学号等),运行一次后设为False
+    "spider" : True,
+
+    # 获取登录cookies配置
+    "login_url" : "http://cas.ecjtu.edu.cn/cas/login",
+    "headers" : {
+         'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+    "payload" : {
+        "encodedService" : "",
+        "service" : "",
+        "serviceName" : "",
+        "loginErrCnt" : "0",
+        "username" : "",
+        "password" : "",
+        "lt" : "",
+    },
+    # 密码加密服务器地址
+    "node_server_url" : "http://127.0.0.1:3000",
+    # 数据库配置
+    "database_db_name" : "",
+    "database_host" : "",
+    "database_user" : "",
+    "database_password" : "",
+    "database_port" : 3306,
+    "database_charset": "utf8",
+}
+
+def get(str):
+    return settings[str]

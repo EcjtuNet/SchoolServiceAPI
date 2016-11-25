@@ -58,11 +58,17 @@ def getScoreInfoFor15(username, password, year, term):
 def getScoreInfoFor14(username, year, term):
     return
 
+
 # Todo
 def getStudentInfo():
     info_url = "http://portal.ecjtu.edu.cn/dcp/getPortalData?sPage=home&gId=null&user_id=null&cid=null&template_type=1"
     all_info = login_portal(info_url)
     print all_info
+    return
+
+
+# Todo
+def testPassword():
     return
 
 
@@ -106,7 +112,6 @@ def getStudentList(username, password):
                 html = cas.page_by_post(cookie, headers, "http://jwxt.ecjtu.jx.cn/infoQuery/class_findStuNames.action", payload)
                 soup = BeautifulSoup(html, "lxml")
                 tr = soup.find_all("tr", class_="classNameDis")
-                info_list = []
                 for i in tr:
                     td = i.find_all("td")
                     info = {

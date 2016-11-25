@@ -31,8 +31,8 @@ class User(BaseModel):
         db_table = 'user'
 
     @classmethod
-    def addUser(self, info):
-        self.create(
+    def addUser(cls, info):
+        cls.create(
             department=info['department'],
             grade=info['grade'],
             name=info['name'],
@@ -41,3 +41,11 @@ class User(BaseModel):
             student_id=info['student_id'],
             student_status=info['student_status']
         )
+
+    # Todo : test
+    @classmethod
+    def getName(cls, student_id):
+        student = cls.get(
+            student_id = student_id
+        )
+        return student['username']

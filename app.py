@@ -20,9 +20,22 @@ def getScore():
     return json.dumps(scoreList)
 
 
-# @app.route('api/v1/infoQuery', methods=['POST'])
-# def getInfo():
-#     return
+# Todo
+@app.route('api/v1/testPassword', methods=['POST'])
+def testPassword():
+    return
+
+
+# Todo
+@app.route('api/v1/getName', methods=['POST'])
+def getName():
+    return
+
+
+# Todo
+@app.route('api/v1/infoQuery', methods=['POST'])
+def getInfo():
+    return
 
 if __name__ == '__main__':
     app.run()

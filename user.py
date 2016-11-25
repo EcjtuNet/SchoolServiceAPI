@@ -28,15 +28,16 @@ class User(BaseModel):
     encode_password = CharField(null=True)
 
     class Meta:
-        db_table = 'use'
+        db_table = 'user'
 
+    @classmethod
     def addUser(self, info):
         self.create(
-            department=info.department,
-            grade=info.grade,
-            name=info.name,
-            sex=info.sex,
-            class_id=info.class_id,
-            student_id=info.student_id,
-            student_status=info.student_status
+            department=info['department'],
+            grade=info['grade'],
+            name=info['name'],
+            sex=info['sex'],
+            class_id=info['class_id'],
+            student_id=info['student_id'],
+            student_status=info['student_status']
         )

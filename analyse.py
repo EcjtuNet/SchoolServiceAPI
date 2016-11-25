@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import re
 from login import Cas as cas
 import config
+from user import User
 
 headers = config.get('headers')
 login_url = config.get('login_url')
@@ -53,11 +54,11 @@ def getScoreInfoFor15(username, password, year, term):
 
     return scoreInfoList
 
-
+# Todo
 def getScoreInfoFor14(username, year, term):
     return
 
-
+# Todo
 def getStudentInfo():
     info_url = "http://portal.ecjtu.edu.cn/dcp/getPortalData?sPage=home&gId=null&user_id=null&cid=null&template_type=1"
     all_info = login_portal(info_url)
@@ -71,19 +72,18 @@ def getStudentList(username, password):
     cookie = login_jwxt(username, password)
     html = cas.page_by_get(cookie, headers, url)
     soup = BeautifulSoup(html, "lxml")
-
+    # 获取学院
     departments = soup.find_all("select",{"name": "depInfo.departMent"})[0].find_all("option")
     departmentList = []
     for department in departments:
         departmentList.append(department["value"])
-
+    # 获取年级
     grades = soup.find_all("select", {"name": "gra.grade"})[0].find_all("option")
     gradeList = []
     for grade in grades:
         if(int(grade["value"])>=2015):
             gradeList.append(grade["value"])
-
-    classesList = {}
+    # 获取班级
     for dep in departmentList:
         for gra in gradeList:
             payload = {
@@ -92,11 +92,32 @@ def getStudentList(username, password):
                 "classInfo.className" : "selectClass"
             }
             html = cas.page_by_post(cookie, headers, "http://jwxt.ecjtu.jx.cn/infoQuery/class_findClaByDepGra.action", payload)
-            patt = re.compile(r'<option.+?>(.+?)</option>')
-            classes = patt.findall(html)[1:]
-            print classes
-
-            # classesList[dep][gra] = classes
-    # print classesList
+            name_patt = re.compile(r'<option.+?>(.+?)</option>')
+            class_names = name_patt.findall(html)[1:]
+            value_patt = re.compile(r'<option\svalue=\'(.+?)\'>.+?</option>')
+            class_value = value_patt.findall(html)[1:]
+            class_dic = dict(zip(class_names, class_value))
+            for key in class_dic:
+                payload = {
+                    "depInfo.departMent":dep,
+                    "gra.grade":gra,
+                    "classInfo.classID":class_dic[key]
+                }
+                html = cas.page_by_post(cookie, headers, "http://jwxt.ecjtu.jx.cn/infoQuery/class_findStuNames.action", payload)
+                soup = BeautifulSoup(html, "lxml")
+                tr = soup.find_all("tr", class_="classNameDis")
+                info_list = []
+                for i in tr:
+                    td = i.find_all("td")
+                    info = {
+                        'department' : dep,
+                        'grade': gra,
+                        'name' : td[1].text,
+                        'sex' : td[2].text,
+                        'class_id' : td[3].text,
+                        'student_id' : td[4].text,
+                        'student_status' : td[5].text
+                    }
+                    User.addUser(info)
     return
 

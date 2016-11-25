@@ -19,6 +19,9 @@
 * 查询信息缓存
 
 ## 部署方法
+> cp config.py.example config.py
+
+> 修改config.py配置
 
 > python deploy.py
 

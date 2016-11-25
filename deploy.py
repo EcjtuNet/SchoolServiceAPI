@@ -11,4 +11,5 @@ if ( u'user' not in mysql_db.get_tables() ):
 mysql_db.close()
 
 # 2
-analyse.getStudentList(config.get('student_id'), config.get('cas_password'))
+if( config.get('spider')):
+    analyse.getStudentList(config.get('student_id'), config.get('cas_password'))

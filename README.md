@@ -33,8 +33,8 @@
 
 > 修改config.py配置
 
-> python deploy.py
+> cd node_server;node app.js &
 
-> cd node_server;node app.js
+> cd ..;python deploy.py
 
-> cd ..;python app.py
+> python app.py

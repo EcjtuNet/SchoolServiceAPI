@@ -117,6 +117,7 @@ def getStudentList(username, password):
                     info = {
                         'department' : dep,
                         'grade': gra,
+                        'major': key,
                         'name' : td[1].text,
                         'sex' : td[2].text,
                         'class_id' : td[3].text,

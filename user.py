@@ -18,6 +18,7 @@ class User(BaseModel):
     id = PrimaryKeyField()
     department = CharField()
     grade = CharField()
+    major = CharField()
     name = CharField()
     sex = CharField()
     class_id = CharField()
@@ -35,6 +36,7 @@ class User(BaseModel):
         cls.create(
             department=info['department'],
             grade=info['grade'],
+            major=info['major'],
             name=info['name'],
             sex=info['sex'],
             class_id=info['class_id'],

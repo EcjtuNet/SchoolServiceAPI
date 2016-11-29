@@ -2,6 +2,7 @@
 # encoding: utf-8
 from bs4 import BeautifulSoup
 import re
+
 from login import Cas as cas
 import config
 from user import User
@@ -33,14 +34,30 @@ def login_jwxt(username, password):
     return login_cookie
 
 
+# Todo
+def testPassword(username, password):
+    # result = Cas.get_ticket_url(config.get('headers'), )
+    return
+
+
+# Todo
+def getStudentInfo():
+    info_url = "http://portal.ecjtu.edu.cn/dcp/getPortalData?sPage=home&gId=null&user_id=null&cid=null&template_type=1"
+    all_info = login_portal(info_url)
+    print all_info
+    return
+
+
 def getScoreInfoFor15(username, password, year, term):
     cookie = login_jwxt(username, password)
     url = "http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action"
     html = cas.page_by_get(cookie, headers, url)
+    scoreInfoList = []
+    if (isinstance(html, (str))):
+        return scoreInfoList
     soup = BeautifulSoup(html, "lxml")
     originScoreInfoList = soup.find_all("ul", class_=year + '_' + term + " term_score")
 
-    scoreInfoList = []
     for originScoreInfo in originScoreInfoList:
         item = originScoreInfo.find_all('li')
         scoreInfo = {
@@ -59,16 +76,11 @@ def getScoreInfoFor14(username, year, term):
     return
 
 
-# Todo
-def getStudentInfo():
-    info_url = "http://portal.ecjtu.edu.cn/dcp/getPortalData?sPage=home&gId=null&user_id=null&cid=null&template_type=1"
-    all_info = login_portal(info_url)
-    print all_info
+def getClassFor15(username, password, year, term):
     return
 
-
 # Todo
-def testPassword():
+def getClassFor14():
     return
 
 

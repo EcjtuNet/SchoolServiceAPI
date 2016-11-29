@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from peewee import *
+
 import config
 
 mysql_db = MySQLDatabase(config.get('database_db_name'), **{'host': config.get('database_host'),

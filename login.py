@@ -3,6 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+
 import config
 
 
@@ -28,21 +29,29 @@ class Cas:
 
         ticket_page = requests.post(login_url, data=payload, headers=headers).text
         pattern = re.findall(ur'\s\swindow\.location\.href="(.*)"\+cookie', ticket_page)
+        if (len(pattern) == 0):
+            return 'error'
         ticket_url = pattern[0]
         return ticket_url
 
     @classmethod
     def get_login_cookie(self, ticket_url, headers):
+        if (isinstance(ticket_url, (str))):
+            return 'error'
         page = requests.get(ticket_url, headers=headers, allow_redirects=False)
         return page.cookies
 
     @classmethod
     def page_by_get(self, cookies , headers, info_url):
+        if (isinstance(cookies, (str))):
+            return 'error'
         info_page = requests.get(info_url, cookies=cookies, headers=headers)
         return info_page.text
 
     @classmethod
     def page_by_post(self, cookies , headers, info_url, payload):
+        if (isinstance(cookies, (str))):
+            return 'error'
         info_page = requests.post(info_url, data=payload, cookies=cookies, headers=headers)
         return info_page.text
 

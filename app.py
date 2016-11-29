@@ -3,23 +3,11 @@
 from flask import Flask, request
 import time
 import json
+
 import analyse
 from user import User
 
 app = Flask(__name__)
-
-@app.route('/api/v1/queryScore', methods=['POST'])
-def getScore():
-    student_id = request.form.get('student_id')
-    password = request.form.get('password')
-    year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
-    term = request.form.get('term') if request.form.get('term') else '1'
-    if (int(student_id[:4]) >= 2015):
-        scoreList = analyse.getScoreInfoFor15(student_id, password, year, term)
-    else:
-        scoreList = analyse.getScoreInfoFor14(student_id, year, term)
-    return json.dumps(scoreList)
-
 
 @app.route('/api/v1/confirmName', methods=['POST'])
 def confirmName():
@@ -41,11 +29,22 @@ def testPassword():
     return
 
 
-
 # Todo
 @app.route('/api/v1/infoQuery', methods=['POST'])
 def getInfo():
     return
+
+@app.route('/api/v1/queryScore', methods=['POST'])
+def getScore():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
+    term = request.form.get('term') if request.form.get('term') else '1'
+    if (int(student_id[:4]) >= 2015):
+        scoreList = analyse.getScoreInfoFor15(student_id, password, year, term)
+    else:
+        scoreList = analyse.getScoreInfoFor14(student_id, year, term)
+    return json.dumps(scoreList)
 
 if __name__ == '__main__':
     app.run()

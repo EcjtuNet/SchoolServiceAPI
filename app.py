@@ -4,36 +4,46 @@ from flask import Flask, request
 import time
 import json
 import analyse
+from user import User
 
 app = Flask(__name__)
 
-@app.route('/api/v1/scoreQuery', methods=['POST'])
+@app.route('/api/v1/queryScore', methods=['POST'])
 def getScore():
-    username = request.form.get('username')
+    student_id = request.form.get('student_id')
     password = request.form.get('password')
     year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
     term = request.form.get('term') if request.form.get('term') else '1'
-    if (int(username[:4]) >= 2015):
-        scoreList = analyse.getScoreInfoFor15(username, password, year, term)
+    if (int(student_id[:4]) >= 2015):
+        scoreList = analyse.getScoreInfoFor15(student_id, password, year, term)
     else:
-        scoreList = analyse.getScoreInfoFor14(username, year, term)
+        scoreList = analyse.getScoreInfoFor14(student_id, year, term)
     return json.dumps(scoreList)
 
 
+@app.route('/api/v1/confirmName', methods=['POST'])
+def confirmName():
+    student_id = request.form.get('student_id')
+    name = User.getName(student_id)
+    return name[:-1]+"*"
+
+
+@app.route('/api/v1/getName', methods=['POST'])
+def getName():
+    student_id = request.form.get('student_id')
+    name = User.getName(student_id)
+    return name
+
+
 # Todo
-@app.route('api/v1/testPassword', methods=['POST'])
+@app.route('/api/v1/savePassword', methods=['POST'])
 def testPassword():
     return
 
 
-# Todo
-@app.route('api/v1/getName', methods=['POST'])
-def getName():
-    return
-
 
 # Todo
-@app.route('api/v1/infoQuery', methods=['POST'])
+@app.route('/api/v1/infoQuery', methods=['POST'])
 def getInfo():
     return
 

@@ -14,6 +14,7 @@ class BaseModel(Model):
     class Meta:
         database = mysql_db
 
+
 class User(BaseModel):
     id = PrimaryKeyField()
     department = CharField()
@@ -44,10 +45,9 @@ class User(BaseModel):
             student_status=info['student_status']
         )
 
-    # Todo : test
+
     @classmethod
     def getName(cls, student_id):
-        student = cls.get(
-            student_id = student_id
-        )
-        return student['username']
+        na = cls.select().where(cls.student_id==student_id)
+        for n in na:
+            return n.name

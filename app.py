@@ -23,7 +23,6 @@ def getName():
     return name
 
 
-# Todo
 @app.route('/api/v1/savePassword', methods=['POST'])
 def savePassword():
     student_id = request.form.get('student_id')

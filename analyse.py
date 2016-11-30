@@ -34,7 +34,6 @@ def login_jwxt(username, password):
     return login_cookie
 
 
-# Todo
 def testPassword(username, password):
     lt = cas.get_lt_value(headers, login_url)
     result = cas.get_ticket_url(config.get('headers'), login_url, payload,

@@ -36,8 +36,15 @@ def login_jwxt(username, password):
 
 # Todo
 def testPassword(username, password):
-    # result = Cas.get_ticket_url(config.get('headers'), )
-    return
+    lt = cas.get_lt_value(headers, login_url)
+    result = cas.get_ticket_url(config.get('headers'), login_url, payload,
+                                encodedService="http%3a%2f%2fportal.ecjtu.edu.cn%2fdcp%2findex.jsp",
+                                service="http://portal.ecjtu.edu.cn/dcp/index.jsp",
+                                username=username,
+                                password=password,
+                                lt=lt
+                                )
+    return result
 
 
 # Todo

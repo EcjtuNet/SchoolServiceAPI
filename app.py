@@ -25,14 +25,21 @@ def getName():
 
 # Todo
 @app.route('/api/v1/savePassword', methods=['POST'])
-def testPassword():
-    return
+def savePassword():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    result = analyse.testPassword(student_id, password)
+    if (result == 'error'):
+        return 'error'
+    User.savePassword(student_id, password)
+    return 'ok'
 
 
 # Todo
 @app.route('/api/v1/infoQuery', methods=['POST'])
 def getInfo():
     return
+
 
 @app.route('/api/v1/queryScore', methods=['POST'])
 def getScore():
@@ -45,6 +52,7 @@ def getScore():
     else:
         scoreList = analyse.getScoreInfoFor14(student_id, year, term)
     return json.dumps(scoreList)
+
 
 if __name__ == '__main__':
     app.run()

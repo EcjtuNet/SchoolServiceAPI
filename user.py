@@ -3,6 +3,7 @@
 from peewee import *
 
 import config
+from login import Cas as cas
 
 mysql_db = MySQLDatabase(config.get('database_db_name'), **{'host': config.get('database_host'),
                                                             'user': config.get('database_user'),
@@ -52,3 +53,12 @@ class User(BaseModel):
         na = cls.select().where(cls.student_id==student_id)
         for n in na:
             return n.name
+
+
+    @classmethod
+    def savePassword(cls, student_id, password):
+        na = cls.select().where(cls.student_id==student_id)
+        for n in na:
+            n.password = password
+            n.save()
+            return n

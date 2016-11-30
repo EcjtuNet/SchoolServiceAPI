@@ -81,5 +81,30 @@ def queryScore():
     return json.dumps(scoreList)
 
 
+@app.route('/api/v1/queryClass', methods=['POST'])
+def queryClass():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
+    term = request.form.get('term') if request.form.get('term') else '1'
+    if (int(student_id[:4]) >= 2015):
+        classList = analyse.getClassFor15(student_id, password, year, term)
+    else:
+        classList = analyse.getClassFor14(student_id, year, term)
+    return json.dumps(classList)
+
+
+@app.route('/api/v1/queryExam', methods=['POST'])
+def queryExam():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y', time.localtime(time.time()))) - 1)
+    term = request.form.get('term') if request.form.get('term') else '1'
+    if (int(student_id[:4]) >= 2015):
+        examList = analyse.getExamFor15(student_id, password, year, term)
+    else:
+        examList = analyse.getExamFor14(student_id, year, term)
+    return json.dumps(examList)
+
 if __name__ == '__main__':
     app.run()

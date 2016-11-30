@@ -70,43 +70,6 @@ def saveStudentInfo(username, password):
     return user
 
 
-def getScoreFor15(username, password, year, term):
-    cookie = login_jwxt(username, password)
-    url = "http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action"
-    html = cas.page_by_get(cookie, headers, url)
-    scoreInfoList = []
-    if (isinstance(html, (str))):
-        return scoreInfoList
-    soup = BeautifulSoup(html, "lxml")
-    originScoreInfoList = soup.find_all("ul", class_=year + '_' + term + " term_score")
-
-    for originScoreInfo in originScoreInfoList:
-        item = originScoreInfo.find_all('li')
-        scoreInfo = {
-            'objectName': item[1].string,
-            'classRequirement': item[2].string,
-            'assessment': item[3].string,
-            'credit': item[4].string,
-            'score': item[5].string
-        }
-        scoreInfoList.append(scoreInfo)
-
-    return scoreInfoList
-
-# Todo
-def getScoreFor14(username, year, term):
-    return
-
-
-# Todo
-def getClassFor15(username, password, year, term):
-    return
-
-# Todo
-def getClassFor14():
-    return
-
-
 # 获取所有班级名单
 def getStudentList(username, password):
     url = "http://jwxt.ecjtu.jx.cn/infoQuery/class_findClassList.action"
@@ -162,3 +125,97 @@ def getStudentList(username, password):
                     User.addUser(info)
     return
 
+
+def getScoreFor15(username, password, year, term):
+    cookie = login_jwxt(username, password)
+    url = "http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action"
+    html = cas.page_by_get(cookie, headers, url)
+    scoreInfoList = []
+    if (isinstance(html, (str))):
+        return scoreInfoList
+    soup = BeautifulSoup(html, "lxml")
+    originScoreInfoList = soup.find_all("ul", class_=year + '_' + term + " term_score")
+
+    for originScoreInfo in originScoreInfoList:
+        item = originScoreInfo.find_all('li')
+        scoreInfo = {
+            'objectName': item[1].string,
+            'classRequirement': item[2].string,
+            'assessment': item[3].string,
+            'credit': item[4].string,
+            'score': item[5].string
+        }
+        scoreInfoList.append(scoreInfo)
+
+    return scoreInfoList
+
+
+# Todo
+def getScoreFor14(username, year, term):
+    return
+
+
+def getClassFor15(username, password, year, term):
+    cookie = login_jwxt(username, password)
+    url = 'http://jwxt.ecjtu.jx.cn/Schedule/Schedule_getUserSchedume.action?term='+str(year)+'.'+str(term)
+    html = cas.page_by_get(cookie, headers, url)
+    soup = BeautifulSoup(html,"lxml")
+    table = soup.find("table",class_="table_border",id="courseSche")
+    trList = table.find_all('tr')
+    classInfoList = []
+    for i in [1,2,3,4,5,6]:
+        originClassInfo = trList[i].find_all('td')
+        singleClassInfoList = []
+        for j in [1,2,3,4,5,6,7]:
+            singleClassInfo = originClassInfo[j].get_text().replace('</br>',' ')
+            singleClassInfoList.append(singleClassInfo)
+        classInfoList.append(singleClassInfoList)
+    monday,tuesday,wednesday,thursday,friday,saturday,sunday = zip(*classInfoList)
+
+    classInfo = {
+        'monday':monday,
+        'tuesday':tuesday,
+        'wednesday':wednesday,
+        'thursday':thursday,
+        'friday':friday,
+        'saturday':saturday,
+        'sunday':sunday
+    }
+    return classInfo
+
+# Todo
+def getClassFor14(username, year, term):
+    return
+
+
+def getExamFor15(username, password, year, term):
+    cookie = login_jwxt(username, password)
+    queryTerm = str(year) + '.' + str(term)
+    url = 'http://jwxt.ecjtu.jx.cn/examArrange/stuExam_stuQueryExam.action?term=' + queryTerm + '&userName=' + username
+    html = cas.page_by_get(cookie, headers, url)
+    soup = BeautifulSoup(html, "lxml")
+    table = soup.find("table", class_="table_border")
+    trList = table.find_all('tr')
+
+    examInfoList = []
+    for i in range(1, len(trList) - 1):
+        tdList = trList[i].find_all('td')
+        singleExamInfoList = []
+        for j in range(8):
+            singleExamInfoList = {
+                '课程名称': tdList[1].string,
+                '课程性质': tdList[2].string,
+                '班级名称': tdList[3].string,
+                '学生人数': tdList[4].string,
+                '考试周次': tdList[5].string,
+                '考试时间': tdList[6].string,
+                '考试地点': tdList[7].string
+            }
+        examInfoList.append(singleExamInfoList)
+
+    return examInfoList
+
+
+# Todo
+def getExamFor16(username, year, term):
+    return

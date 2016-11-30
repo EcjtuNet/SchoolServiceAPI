@@ -2,6 +2,7 @@
 # encoding: utf-8
 from bs4 import BeautifulSoup
 import re
+import json
 
 from login import Cas as cas
 import config
@@ -13,7 +14,7 @@ payload = config.get('payload')
 
 
 # 智慧交大
-def login_portal(username, password, info_url):
+def login_portal(username, password):
     lt = cas.get_lt_value(headers, login_url)
     encodeService = "http%3a%2f%2fportal.ecjtu.edu.cn%2fdcp%2findex.jsp"
     service = "http://portal.ecjtu.edu.cn/dcp/index.jsp"
@@ -46,15 +47,30 @@ def testPassword(username, password):
     return result
 
 
-# Todo
-def getStudentInfo():
-    info_url = "http://portal.ecjtu.edu.cn/dcp/getPortalData?sPage=home&gId=null&user_id=null&cid=null&template_type=1"
-    all_info = login_portal(info_url)
-    print all_info
-    return
+def saveStudentInfo(username, password):
+    info_url = "http://portal.ecjtu.edu.cn/dcp/profile/profile.action"
+    cookies = login_portal(username, password)
+    headers = {
+        'Content-Type' : 'application/json; charset=UTF-8',
+        'User-Agent' : 'Mozilla/5.0(Macintosh;Intel Mac OSX 10_12_1) AppleWebKit 537.36(KHTML, like Gecko) Chrome 54.0.2840.98Safari537.36',
+        'Referer' : 'http://portal.ecjtu.edu.cn/dcp/forward.action?path=/portal/portal&p=info',
+        'Origin' : 'http: // portal.ecjtu.edu.cn',
+        'render' : 'json',
+        'clientType' : 'json'
+    }
+    payload = {
+               "map":{
+                    "method" : "getInfo",
+                    "params" : None},
+               "javaClass" : "java.util.HashMap"
+              }
+    all_info = cas.page_by_post(cookies, headers, info_url, json.dumps(payload))
+    info = json.loads(all_info)['list'][0]['map']
+    user = User.saveInfo(username, info.get('CARD_ID', ''), info.get('BIRTHDAY', ''), info.get('MOBILE', ''))
+    return user
 
 
-def getScoreInfoFor15(username, password, year, term):
+def getScoreFor15(username, password, year, term):
     cookie = login_jwxt(username, password)
     url = "http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action"
     html = cas.page_by_get(cookie, headers, url)
@@ -78,10 +94,11 @@ def getScoreInfoFor15(username, password, year, term):
     return scoreInfoList
 
 # Todo
-def getScoreInfoFor14(username, year, term):
+def getScoreFor14(username, year, term):
     return
 
 
+# Todo
 def getClassFor15(username, password, year, term):
     return
 

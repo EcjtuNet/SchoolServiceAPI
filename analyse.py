@@ -5,6 +5,7 @@ import re
 import json
 
 from login import Cas as cas
+from login import Jwc as jwc
 import config
 from user import User
 
@@ -155,7 +156,31 @@ def getScoreFor15(username, password, year, term):
 
 # Todo
 def getScoreFor14(username, year, term):
-    return
+    cookies = jwc.score_login()
+    html = jwc.fetch_score(username, cookies, year, term)
+    soup = BeautifulSoup(html, "lxml")
+
+    result = soup.find_all("center")[1].__dict__
+    result =  result['contents'][0]
+    pattern = re.compile(r'\d+')
+    r = pattern.findall(result)[0]
+    if (int(r) == 0):
+        return 'error'
+
+    result = soup.find_all("tr")[2:]
+    scoreList = []
+    for tr in result:
+        td = tr.find_all("td")
+        eleList = []
+        for ele in td:
+            contents = ele.__dict__
+            content = contents['contents'][0]
+            if (re.findall(r'red', content.encode('gbk'))):
+                content = content.encode('gbk').replace('<font color="red">','')
+                content = content.encode('gbk').replace('</font>','')
+            eleList.append(content)
+        scoreList.append(eleList)
+    return scoreList
 
 
 def getClassFor15(username, password, year, term):

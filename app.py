@@ -16,14 +16,36 @@ app = Flask(__name__)
 def confirmName():
     student_id = request.form.get('student_id')
     name = User.getName(student_id)
-    return name[:-1]+"*"
+    data = {
+        "status":"",
+        "data":{
+            "name":""
+        }
+    }
+    if (not name):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['name'] = name[:-1]+"*"
+    return json.dumps(data)
 
 
 @app.route('/api/v1/getName', methods=['POST'])
 def getName():
     student_id = request.form.get('student_id')
     name = User.getName(student_id)
-    return name
+    data = {
+        "status":"",
+        "data":{
+            "name":""
+        }
+    }
+    if (not name):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['name'] = name
+    return json.dumps(data)
 
 
 @app.route('/api/v1/savePassword', methods=['POST'])
@@ -31,10 +53,20 @@ def savePassword():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
     result = analyse.testPassword(student_id, password)
+    data = {
+        "status":"",
+        "data":{
+            "result":""
+        }
+    }
     if (result == 'error'):
-        return 'error'
-    User.savePassword(student_id, password)
-    return 'ok'
+        data['status'] = False
+        data['data']['result'] = 'password error'
+        return json.dumps(data)
+    u = User.savePassword(student_id, password)
+    data['status'] = True
+    data['data']['result'] = 'password changed'
+    return json.dumps(data)
 
 
 @app.route('/api/v1/saveInfo', methods=['POST'])

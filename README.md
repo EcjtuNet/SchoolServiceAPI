@@ -23,16 +23,19 @@
 * 查询信息缓存
 
 ## 部署方法
-> pip install -r requirements.txt
+```
+ pip install -r requirements.txt
 
-> 安装node
+ 安装node
 
-> cp config.py.example config.py
+ cp config.py.example config.py
 
-> 修改config.py配置
+ 修改config.py配置
 
-> cd node_server;node app.js &
+ cd node_server;node app.js &
 
-> cd ..;python deploy.py
+ cd ..;python deploy.py
 
-> python app.py
+ python app.py
+
+```

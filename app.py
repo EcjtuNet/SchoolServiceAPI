@@ -74,7 +74,18 @@ def saveInfo():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
     user = analyse.saveStudentInfo(student_id, password)
-    return 'ok'
+    data = {
+        "status":"",
+        "data":{
+            "user":""
+        }
+    }
+    if (user == 'error'):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['user'] = user.__dict__['_data']
+    return json.dumps(data)
 
 
 @app.route('/api/v1/getInfo', methods=['POST'])
@@ -82,6 +93,15 @@ def getInfo():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
     u = User.getInfo(student_id, password)
+    data = {
+        'status':"",
+        'data':{
+            "info":""
+        }
+    }
+    if (not u):
+        data['status'] = False
+        return json.dumps(data)
     info = {
         "department" : u.department,
         "grade" : u.grade,
@@ -97,7 +117,9 @@ def getInfo():
         "mobile" : u.mobile,
         "bound" : u.bound
     }
-    return json.dumps(info)
+    data['status'] = True
+    data['data']['info'] = info
+    return json.dumps(data)
 
 
 @app.route('/api/v1/queryScore', methods=['POST'])
@@ -110,7 +132,18 @@ def queryScore():
         scoreList = analyse.getScoreFor15(student_id, password, year, term)
     else:
         scoreList = analyse.getScoreFor14(student_id, year, term)
-    return json.dumps(scoreList)
+    data = {
+        "status":"",
+        "data":{
+            "score_list":""
+        }
+    }
+    if (scoreList == 'error'):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['score_list'] = scoreList
+    return json.dumps(data)
 
 
 @app.route('/api/v1/queryClass', methods=['POST'])
@@ -123,6 +156,17 @@ def queryClass():
         classList = analyse.getClassFor15(student_id, password, year, term)
     else:
         classList = analyse.getClassFor14(student_id, year, term)
+    data = {
+        "status":"",
+        "data":{
+            "class_list":""
+        }
+    }
+    if (classList == 'error'):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['class_list'] = classList
     return json.dumps(classList)
 
 
@@ -136,7 +180,18 @@ def queryExam():
         examList = analyse.getExamFor15(student_id, password, year, term)
     else:
         examList = analyse.getExamFor14(student_id, year, term)
-    return json.dumps(examList)
+    data = {
+        "status":"",
+        "data":{
+            "exam_list":""
+        }
+    }
+    if (examList == 'error'):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['exam_list'] = examList
+    return json.dumps(data)
 
 if __name__ == '__main__':
     app.run()

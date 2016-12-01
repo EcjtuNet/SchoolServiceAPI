@@ -65,6 +65,8 @@ def saveStudentInfo(username, password):
                "javaClass" : "java.util.HashMap"
               }
     all_info = cas.page_by_post(cookies, headers, info_url, json.dumps(payload))
+    if (all_info == 'error'):
+        return 'error'
     info = json.loads(all_info)['list'][0]['map']
     user = User.saveInfo(username, info.get('CARD_ID', ''), info.get('BIRTHDAY', ''), info.get('MOBILE', ''))
     return user
@@ -130,6 +132,8 @@ def getScoreFor15(username, password, year, term):
     cookie = login_jwxt(username, password)
     url = "http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action"
     html = cas.page_by_get(cookie, headers, url)
+    if (html == 'error'):
+        return 'error'
     scoreInfoList = []
     if (isinstance(html, (str))):
         return scoreInfoList
@@ -146,7 +150,6 @@ def getScoreFor15(username, password, year, term):
             'score': item[5].string
         }
         scoreInfoList.append(scoreInfo)
-
     return scoreInfoList
 
 
@@ -159,6 +162,8 @@ def getClassFor15(username, password, year, term):
     cookie = login_jwxt(username, password)
     url = 'http://jwxt.ecjtu.jx.cn/Schedule/Schedule_getUserSchedume.action?term='+str(year)+'.'+str(term)
     html = cas.page_by_get(cookie, headers, url)
+    if (html == 'error'):
+        return 'error'
     soup = BeautifulSoup(html,"lxml")
     table = soup.find("table",class_="table_border",id="courseSche")
     trList = table.find_all('tr')
@@ -193,6 +198,8 @@ def getExamFor15(username, password, year, term):
     queryTerm = str(year) + '.' + str(term)
     url = 'http://jwxt.ecjtu.jx.cn/examArrange/stuExam_stuQueryExam.action?term=' + queryTerm + '&userName=' + username
     html = cas.page_by_get(cookie, headers, url)
+    if (html == 'error'):
+        return 'error'
     soup = BeautifulSoup(html, "lxml")
     table = soup.find("table", class_="table_border")
     trList = table.find_all('tr')
@@ -217,5 +224,5 @@ def getExamFor15(username, password, year, term):
 
 
 # Todo
-def getExamFor16(username, year, term):
+def getExamFor14(username, year, term):
     return

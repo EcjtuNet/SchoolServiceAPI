@@ -6,6 +6,7 @@ import json
 
 from login import Cas as cas
 from login import Jwc as jwc
+from login import Lib as lib
 import config
 from user import User
 
@@ -30,6 +31,17 @@ def login_jwxt(username, password):
     lt = cas.get_lt_value(headers, login_url)
     encodeService = "http%3a%2f%2fjwxt.ecjtu.jx.cn%2fstuMag%2fLogin_dcpLogin.action"
     service = "http://jwxt.ecjtu.jx.cn/stuMag/Login_dcpLogin.action"
+
+    ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
+    login_cookie = cas.get_login_cookie(ticket_url, headers)
+    return login_cookie
+
+
+# 图书馆
+def login_lib(username, password):
+    lt = cas.get_lt_value(headers, login_url)
+    encodeService = ""
+    service = "http://lib.ecjtu.jx.cn/goldwsdl/login.aspx"
 
     ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
     login_cookie = cas.get_login_cookie(ticket_url, headers)
@@ -154,7 +166,6 @@ def getScoreFor15(username, password, year, term):
     return scoreInfoList
 
 
-# Todo
 def getScoreFor14(username, year, term):
     cookies = jwc.score_login()
     html = jwc.fetch_score(username, cookies, year, term)
@@ -251,3 +262,13 @@ def getExamFor15(username, password, year, term):
 # Todo
 def getExamFor14(username, year, term):
     return
+
+
+def getLib(username, password):
+    html = lib.login_lib(username, password)
+    print html
+    soup = BeautifulSoup(html,"lxml")
+    table = soup.find("table", id="DataGrid1")
+    print table
+    libList = []
+    return libList

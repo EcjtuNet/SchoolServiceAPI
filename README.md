@@ -29,17 +29,21 @@
 ## 部署方法
 
 ```
- pip install -r requirements.txt
+ > pip install -r requirements.txt
 
- 安装node
+  安装node
+ 
+ > node -v
 
- cp config.py.example config.py
+ > cp config.py.example config.py
 
- 修改config.py配置
+  修改config.py配置
 
- cd node_server;node app.js &
+> vim config.py
 
- cd ..;python deploy.py
+> cd node_server;node app.js &
 
- python app.py
+> cd ..;python deploy.py
+
+> python app.py
 ```

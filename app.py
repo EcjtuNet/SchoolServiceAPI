@@ -192,5 +192,13 @@ def queryExam():
     data['data']['exam_list'] = examList
     return json.dumps(data)
 
+
+@app.route('/api/v1/queryLib', methods=['POST'])
+def queryLib():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    libList = analyse.getLib(student_id, password)
+    return json.dumps(libList)
+
 if __name__ == '__main__':
     app.run()

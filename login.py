@@ -90,3 +90,21 @@ class Jwc:
                              )
         page.encoding = 'gbk'
         return page.text
+
+
+# 图书馆
+class Lib:
+    def __init__(self):
+        return
+
+
+    @classmethod
+    def login_lib(cls, username, password):
+        page = requests.post("http://Lib.ecjtu.jx.cn/gdweb/CheckTick.aspx",
+                             {
+                                 "fullname":username,
+                                 "password":password,
+                                 "logintype":"BARCODE",
+                                 "url":"ReaderTable.aspx"
+                             })
+        return page.text

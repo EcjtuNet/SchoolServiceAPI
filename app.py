@@ -11,7 +11,6 @@ app = Flask(__name__)
 
 # get开头接口取自数据库
 # query开头接口实时获取
-
 @app.route('/api/v1/confirmName', methods=['POST'])
 def confirmName():
     student_id = request.form.get('student_id')

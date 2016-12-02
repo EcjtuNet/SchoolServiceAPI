@@ -16,13 +16,18 @@
 
 * 15级成绩,课表，考试安排查询接口
 
+* 14级成绩查询接口
+
 ## TODO
 
-* 14级各类接口
+* 14级课表, 考试安排接口
+
+* 查饭卡，图书馆接口
 
 * 查询信息缓存
 
 ## 部署方法
+
 ```
  pip install -r requirements.txt
 
@@ -37,5 +42,4 @@
  cd ..;python deploy.py
 
  python app.py
-
 ```

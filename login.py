@@ -84,10 +84,9 @@ class Jwc:
     @classmethod
     def fetch_score(cls, username, cookies, year, term):
         page = requests.post('http://jwc.ecjtu.jx.cn/mis_o/query.php',
-                            {"StuID": username, "Term": year+'.'+term},
+                            {"StuID": username,
+                             "Term": year+'.'+term},
                             cookies=cookies,
                              )
         page.encoding = 'gbk'
         return page.text
-
-

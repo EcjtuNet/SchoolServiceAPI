@@ -33,3 +33,334 @@ HOST: http://ss.ecjtu.tech/api/v1
                     "name": ""
                 }
             }
+            
+## 获取姓名 [/getName] 
+
+### getName [POST]
+
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "student_id":"2015...",
+            "password":"..."
+        }
+
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+
+            {
+                "status": true,
+                "data": {
+                    "name": "某某"
+                }
+            }
+    
+            {
+                "status": false,
+                "data": {
+                    "name": ""
+                }
+            }
+
+## 绑定密码 [/savePassword]
+
+### savePassword [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+            {
+                "student_id":"2015...",
+                "password":"..."
+            }
+            
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+    
+            {
+                "status": true,
+                "data": {
+                    "result": "password changed"
+                }
+            }
+            
+            {
+                "status": false,
+                "data": {
+                    "result": "password error"
+                }
+            }
+            
+## 抓取用户信息 [/saveInfo]
+
+### saveInfo [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+            {
+                "student_id":"2015...",
+                "password":"..."
+            }
+            
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+        
+            {
+                "status": true,
+                "data": {
+                    "user": {
+                        "major": "软件...",
+                        "student_status": "正常|有学籍",
+                        "name": "某某",
+                        "grade": "2015",
+                        "student_id": "2015...",
+                        "card_id": "身份证",
+                        "bound": true,
+                        "sex": "男",
+                        "class_id": "2015...",
+                        "birthday": "199...",
+                        "mobile": "1.....",
+                        "ecard_id": null,
+                        "department": "软件..",
+                        "password": "2...",
+                        "id": ...
+                    }
+                }
+            }
+            
+            {
+                "status": false,
+                "data": {
+                    "user": ""
+                }
+            }
+            
+## 获取用户详细信息 [/getInfo]
+
+### getInfo [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+            {
+                "student_id":"2015...",
+                "password":"..."
+            }
+            
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+    
+            {
+                "status": true,
+                "data": {
+                    "info": {
+                        "major": "软件工程2015-1",
+                        "grade": "2015",
+                        "bound": true,
+                        "sex": "男",
+                        "birthday": "1997|03|29",
+                        "student_status": "正常|有学籍",
+                        "name": "邱晴",
+                        "class_id": "2015211001000116",
+                        "student_id": "2015211001000116",
+                        "card_id": "360722199703292417",
+                        "mobile": "15970700319",
+                        "department": "软件学院",
+                        "ecard_id": null
+                    }
+                }
+            }
+            
+            {
+                "status": false,
+                "data": {
+                    "info": ""
+                }
+            }
+        
+## 抓取成绩 [/queryScore]
+
+### queryScore [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+            {
+                "student_id":"2015...",
+                "password":"...",
+                "year":"2015",
+                "term":"2"
+            }
+            
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+    
+            {
+                "status": true,
+                "data": {
+                    "score_list": [
+                        {
+                            "classRequirement": "公共任选课",
+                            "score": "优秀",
+                            "assessment": "考查",
+                            "objectName": "科学技术史",
+                            "credit": "2"
+                        },
+                        {
+                            "classRequirement": "必修课",
+                            "score": "80",
+                            "assessment": "考查",
+                            "objectName": "交通概论",
+                            "credit": "2"
+                        },
+                        {
+                            "classRequirement": "必修课",
+                            "score": "优秀",
+                            "assessment": "考查",
+                            "objectName": "综合课程设计Ⅰ",
+                            "credit": "2"
+                        }
+                    ]
+                }
+            }
+            
+            {
+              "status": false,
+              "data": {
+                "score_list": ""
+              }
+            }
+            
+## 抓取课表 [/queryClass]
+
+### queryClass [POST]
++ Request (application/x-www-form-urlencoded)
+
+            {
+                "student_id":"2015...",
+                "password":"...",
+                "year":"2016",
+                "term":"1"
+            }
+            
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+    
+            {
+                "monday": [
+                    " 概率论与数理统计朱惠倩 @31-2021-16  1,2",
+                    " 体育Ⅲ刘志英 1-16  3,4",
+                    " ",
+                    " ",
+                    " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11",
+                    " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11"
+                ],
+                "tuesday": [
+                    " 大学英语Ⅲ陈蔚 @31-3181-12  1,2",
+                    " Java程序设计(A)严丽平 @31-6171-16(单) 3,4",
+                    " Web 应用设计基础（A）张薇 @31-5301-16  5,6,7",
+                    " Web 应用设计基础（A）张薇 @31-5301-16  5,6,7",
+                    " ",
+                    " "
+                ],
+                "friday": [
+                    " ",
+                    " 大学英语Ⅲ陈蔚 @31-6161-12  3,4",
+                    " 数据库系统原理 （A）魏永丰 @31-5201-16  5,6",
+                    " 软件工程（A）汤文亮 @31-2011-16  7,8",
+                    " ",
+                    " "
+                ],
+                "wednesday": [
+                    " 概率论与数理统计朱惠倩 @31-2021-16(单) 1,2软件工程（A）汤文亮 @31-2221-16(双) 1,2",
+                    " 数据库系统原理 （A）魏永丰 @31-5201-16  3,4",
+                    " 中国近现代史纲要张昭国 @31-3171-12  5,6",
+                    " ",
+                    " ",
+                    " "
+                ],
+                "thursday": [
+                    " Java程序设计(A)严丽平 @31-6081-16  1,2",
+                    " 计算方法 （A）向华萍 @31-3241-16  3,4",
+                    " 形势政策与省情教育Ⅱ韩涛 @31-3064-6  5,6",
+                    " ",
+                    " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11",
+                    " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11"
+                ],
+                "sunday": [
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    " "
+                ],
+                "saturday": [
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    " "
+                ]
+            }
+            
+            {
+              "status": false,
+              "data": {
+                "class_list": ""
+              }
+            }
+    
+## 抓取考试安排  [/queryExam]
+
+### queryExam [POST]
++ Request (application/x-www-form-urlencoded)
+
+            {
+                "student_id":"2015...",
+                "password":"...",
+                "year":"2016",
+                "term":"1"
+            }
+            
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+    
+            {
+              "status": true,
+              "data": {
+                "exam_list": [
+                  {
+                    "课程性质": "必修课",
+                    "考试地点": "14-418",
+                    "班级名称": "高等数学(A)Ⅰ(20161-28)【小2班】",
+                    "考试时间": "2017年01月10日(星期二)14:00-16:00",
+                    "考试周次": "20",
+                    "学生人数": "32",
+                    "课程名称": "高等数学(A)Ⅰ"
+                  },
+                  {
+                    "课程性质": "必修课",
+                    "考试地点": "31-317",
+                    "班级名称": "VB级(2015-3)【小1班】",
+                    "考试时间": "2017年01月10日(星期二)08:00-10:00",
+                    "考试周次": "20",
+                    "学生人数": "34",
+                    "课程名称": "大学英语Ⅲ"
+                  }
+                ]
+              }
+            }
+            
+            {
+              "status": false,
+              "data": {
+                "exam_list": ""
+              }
+            }

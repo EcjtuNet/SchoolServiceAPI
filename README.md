@@ -35,6 +35,14 @@
     python -V
  
     python 2.7
+    
+ > 安装mysql
+    yum install mysql
+    yum install mysql-devel
+ 
+ > 安装python-pip
+ 
+    yum install python-pip
  
  > pip install virtualenv
  
@@ -49,24 +57,25 @@
     node -v
  
     v7.1.0
-    
 
 > cp config.py.example config.py
 
 > vim config.py
 
-> cd node_server;node app.js &
+> cd node_server;
+    
+    npm install -g pm2;
+    
+    pm2 start app.js --name ss_ecjtu_tech
 
 > cd ..;python deploy.py
 
 > gunicorn -c gunicorn.conf app:app &
-
 ```
 
 ```option: 使用supervisor```
 
 ```
-
 > echo_supervisord_conf
 
 > echo_supervisord_conf > /etc/supervisord.conf
@@ -82,7 +91,6 @@
 > supervisord -c /etc/supervisord.conf
 
 > supervisorctl start ss_ecjtu_tech
-
 ```
 
 ``option: 开机自动启动 Supervisord``
@@ -90,5 +98,4 @@
 > centos7.2
 ```
 echo "/usr/bin/supervisord -c /etc/supervisord.conf" /etc/rc.d/rc.local
-
 ```

@@ -215,7 +215,7 @@ def getClassFor15(username, password, year, term):
         originClassInfo = trList[i].find_all('td')
         singleClassInfoList = []
         for j in [1,2,3,4,5,6,7]:
-            singleClassInfo = originClassInfo[j].get_text().replace('</br>',' ')
+            singleClassInfo = originClassInfo[j].get_text().replace('</br>','')
             singleClassInfoList.append(singleClassInfo)
         classInfoList.append(singleClassInfoList)
     monday,tuesday,wednesday,thursday,friday,saturday,sunday = zip(*classInfoList)

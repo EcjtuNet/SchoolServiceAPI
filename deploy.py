@@ -4,6 +4,7 @@ from user import *
 import analyse
 import config
 
+
 # 1
 mysql_db.connect()
 

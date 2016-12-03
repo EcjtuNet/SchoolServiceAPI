@@ -200,5 +200,8 @@ def queryLib():
     libList = analyse.getLib(student_id, password)
     return json.dumps(libList)
 
-if __name__ == '__main__':
-    app.run()
+from werkzeug.contrib.fixers import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app)
+
+if __name__ ==  '__main__':
+    app.run(port=8001)

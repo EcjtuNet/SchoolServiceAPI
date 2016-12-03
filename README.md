@@ -27,17 +27,31 @@
 * 查询信息缓存
 
 ## 部署方法
+``请注意系统权限``
 
-```
- > pip install -r requirements.txt
-
-  安装node
+``` 
+ > python版本
  
- > node -v
+    python -V
+ 
+    python 2.7
+ 
+ > pip install virtualenv
+ 
+ > virtualenv env
+ 
+ > source env/bin/activate
+ 
+ > pip install -r requirements.txt
+ 
+ > 安装node服务 :
+   
+    node -v
+ 
+    v7.1.0
+    
 
- > cp config.py.example config.py
-
-  修改config.py配置
+> cp config.py.example config.py
 
 > vim config.py
 
@@ -45,5 +59,36 @@
 
 > cd ..;python deploy.py
 
-> python app.py
+> gunicorn -c gunicorn.conf app:app &
+
+```
+
+```option: 使用supervisor```
+
+```
+
+> echo_supervisord_conf
+
+> echo_supervisord_conf > /etc/supervisord.conf
+
+> cd /etc;mkdir supervisor.d
+
+> echo "files = /etc/supervisor.d/*.conf" >> supervisord.conf
+
+> cd -;mv ss_supervisor.conf /etc/supervisor.d
+
+> 修改ss_supervisor.conf配置
+
+> supervisord -c /etc/supervisord.conf
+
+> supervisorctl start ss_ecjtu_tech
+
+```
+
+``option: 开机自动启动 Supervisord``
+
+> centos7.2
+```
+echo "/usr/bin/supervisord -c /etc/supervisord.conf" /etc/rc.d/rc.local
+
 ```

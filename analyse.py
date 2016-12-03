@@ -21,7 +21,9 @@ def login_portal(username, password):
     encodeService = "http%3a%2f%2fportal.ecjtu.edu.cn%2fdcp%2findex.jsp"
     service = "http://portal.ecjtu.edu.cn/dcp/index.jsp"
 
-    ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
+    ticket_url = cas.get_ticket_url(headers, login_url, payload,
+                                    encodeService, service,
+                                    username, password, lt)
     login_cookie = cas.get_login_cookie(ticket_url, headers)
     return login_cookie
 
@@ -32,7 +34,9 @@ def login_jwxt(username, password):
     encodeService = "http%3a%2f%2fjwxt.ecjtu.jx.cn%2fstuMag%2fLogin_dcpLogin.action"
     service = "http://jwxt.ecjtu.jx.cn/stuMag/Login_dcpLogin.action"
 
-    ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
+    ticket_url = cas.get_ticket_url(headers, login_url, payload,
+                                    encodeService, service,
+                                    username, password, lt)
     login_cookie = cas.get_login_cookie(ticket_url, headers)
     return login_cookie
 
@@ -43,7 +47,9 @@ def login_lib(username, password):
     encodeService = ""
     service = "http://lib.ecjtu.jx.cn/goldwsdl/login.aspx"
 
-    ticket_url = cas.get_ticket_url(headers, login_url, payload, encodeService, service, username, password, lt)
+    ticket_url = cas.get_ticket_url(headers, login_url, payload,
+                                    encodeService, service,
+                                    username, password, lt)
     login_cookie = cas.get_login_cookie(ticket_url, headers)
     return login_cookie
 
@@ -81,7 +87,8 @@ def saveStudentInfo(username, password):
     if (all_info == 'error'):
         return 'error'
     info = json.loads(all_info)['list'][0]['map']
-    user = User.saveInfo(username, info.get('CARD_ID', ''), info.get('BIRTHDAY', ''), info.get('MOBILE', ''))
+    user = User.saveInfo(username, info.get('CARD_ID', ''),
+                         info.get('BIRTHDAY', ''), info.get('MOBILE', ''))
     return user
 
 
@@ -264,6 +271,7 @@ def getExamFor14(username, year, term):
     return
 
 
+# Todo
 def getLib(username, password):
     html = lib.login_lib(username, password)
     print html

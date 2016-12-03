@@ -1,5 +1,7 @@
 # 校园服务接口
 
+[apiary接口文档](http://docs.schoolservice.apiary.io/)
+
 ## 实现功能：
 
 * cas跳转登录智慧交大和教务系统

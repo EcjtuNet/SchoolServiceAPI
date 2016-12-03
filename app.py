@@ -29,6 +29,7 @@ def confirmName():
     return json.dumps(data)
 
 
+# Todo验证密码
 @app.route('/api/v1/getName', methods=['POST'])
 def getName():
     student_id = request.form.get('student_id')

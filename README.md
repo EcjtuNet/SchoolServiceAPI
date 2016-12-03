@@ -37,9 +37,28 @@
     python 2.7
     
  > 安装mysql
+    yum install python-devel
     yum install mysql
     yum install mysql-devel
- 
+    yum install gcc gcc-devel
+    
+ > 创建数据库
+    mysql -u root -p
+    create database ss_ecjtu_tech character set utf8;
+    修改mysql的my.cnf
+    
+    [client]
+    default-character-set=utf8
+    
+    [mysqld]
+    character-set-server=utf8
+    
+    [mysql]
+    no-auto-rehash
+    default-character-set=utf8
+    
+    > service mysql restart
+    
  > 安装python-pip
  
     yum install python-pip
@@ -76,15 +95,17 @@
 ```option: 使用supervisor```
 
 ```
+> pip install supervisor
+
 > echo_supervisord_conf
 
 > echo_supervisord_conf > /etc/supervisord.conf
 
-> cd /etc;mkdir supervisor.d
+> mkdir /etc/supervisor.d
 
 > echo "files = /etc/supervisor.d/*.conf" >> supervisord.conf
 
-> cd -;mv ss_supervisor.conf /etc/supervisor.d
+> mv ss_supervisor.conf /etc/supervisor.d
 
 > 修改ss_supervisor.conf配置
 

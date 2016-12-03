@@ -103,9 +103,11 @@
 
 > mkdir /etc/supervisor.d
 
-> echo "files = /etc/supervisor.d/*.conf" >> supervisord.conf
+> echo "[include]" >> /etc/supervisord.conf
 
-> mv ss_supervisor.conf /etc/supervisor.d
+> echo "files = /etc/supervisor.d/*.conf" >> /etc/supervisord.conf
+
+> cp ss_supervisor.conf /etc/supervisor.d
 
 > 修改ss_supervisor.conf配置
 

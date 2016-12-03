@@ -1,0 +1,35 @@
+FORMAT: 1A
+HOST: http://ss.ecjtu.tech/api/v1
+
+# school_service
+
+校园服务接口
+
+## 验证姓名 [/confirmName] 
+
+### confirmName [POST]
+
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "student_id":"2015..."
+        }
+
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+
+            {
+                "status": true,
+                "data": {
+                    "name": "某*"
+                }
+            }
+    
+            {
+                "status": false,
+                "data": {
+                    "name": ""
+                }
+            }

@@ -147,6 +147,64 @@ def getStudentList(username, password):
                     User.addUser(info)
     return
 
+# 获取所有14及以前班级名单
+def get_student_list_for_14():
+    url = "http://jwc.ecjtu.jx.cn:8080/jwcmis/stuquery.jsp"
+    html = requests.get(url).text
+    soup = BeautifulSoup(html, "lxml")
+
+    # 获取学院部门
+    departments = soup.find_all("select",{"name": "depart"})[0].find_all("option")
+    depart_list = []
+    for department in departments:
+        depart_list.append([department["value"], department.string])
+
+    # 排除部门垃圾数据
+    ignorance = ['10', '14', '31', '40', '61']
+    depart_list = filter(lambda x:(x in ignorance) == False, depart_list)  
+
+    # 获取年级
+    grades = soup.find_all("select", {"name": "nianji"})[0].find_all("option")
+    grade_list = []
+    for grade in grades:
+        if(int(grade["value"]) <= 2014):
+            grade_list.append(grade["value"])
+
+    # 获取班级
+    class_list = []
+    for depart in depart_list:
+        for grade in grade_list:
+            payload = {
+                "depart": depart[0],
+                "nianji": grade,
+            }
+            html = requests.get(url, params=payload).text
+            soup = BeautifulSoup(html, "lxml")
+            classes = soup.find_all("select",{"name": "banji"})[0].find_all("option")[1:]
+            for class_item in classes:
+                class_id = class_item["value"]
+                class_name = class_item.string
+                class_list.append([class_id, class_name])
+                payload = {
+                    "banji": class_id,
+                }
+                html = requests.get(url, params=payload).text
+                soup = BeautifulSoup(html, "lxml")
+                tr = soup.find_all("tr")[1:]
+                if tr:
+                    for i in tr:
+                        td = i.find_all("td")
+                        print depart[1],td[1].text,grade,class_name,td[1].text,td[2].text,td[3].text,td[4].text
+                        row = {
+                            'department' : depart[1],
+                            'grade': grade,
+                            'class_name': class_name,
+                            'student_name' : td[1].text,
+                            'student_class_id' : td[2].text,
+                            'student_id' : td[3].text,
+                            'student_status' : td[4].text
+                        }
+    return
 
 def getScoreFor15(username, password, year, term):
     cookie = login_jwxt(username, password)
@@ -270,13 +328,37 @@ def getExamFor15(username, password, year, term):
 def getExamFor14(username, year, term):
     return
 
+# Todo
+def getLib(student_id, password):
+    headers = {
+         'render':'json',
+         'clientType':'json',
+    }
+    data = {"map":{"method":"getBookInfo","params":{"javaClass":"java.util.ArrayList","list":[student_id,1,50]}},"javaClass":"java.util.HashMap"}
+    recordList = requests.post('http://portal.ecjtu.edu.cn/dcp/jy/jyH5Mobile.action', data=json.dumps(data), headers=headers).text
+    recordList = json.loads(recordList)["list"]
+
+    result = []
+    for i in recordList:
+        print i
+        result = {
+            'bookID': i["map"]["TSMC"],
+            'bookName': i["map"]["BZ"],
+            'borrowDate': i["map"]["GHRQ"]["time"],
+            'returnDate': i["map"]["GHRQ"]["time"]
+        }
+
+    # html = lib.login_lib(username, password)
+    # print html
+    # soup = BeautifulSoup(html,"lxml")
+    # table = soup.find("table", id="DataGrid1")
+    # print table
+    return result
 
 # Todo
-def getLib(username, password):
-    html = lib.login_lib(username, password)
-    print html
-    soup = BeautifulSoup(html,"lxml")
-    table = soup.find("table", id="DataGrid1")
-    print table
-    libList = []
-    return libList
+def getEcard(student_id, password):
+    ticket_url = login_ecard(student_id, password)
+    ticket_patt = re.compile(r'http://ecard.ecjtu.jx.cn/hdjtdrPortalHome.action\?ticket=(.+)')
+    ticket = ticket_patt.findall(ticket_url)[0]
+    result = requests.get('http://api.ecjtu.org/home/ecard/ecardtoday/card/' + student_id + '/ticket/' + ticket)
+    return result

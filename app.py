@@ -193,13 +193,40 @@ def queryExam():
     data['data']['exam_list'] = examList
     return json.dumps(data)
 
-
 @app.route('/api/v1/queryLib', methods=['POST'])
 def queryLib():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
     libList = analyse.getLib(student_id, password)
-    return json.dumps(libList)
+    if not libList:
+        data = {
+            "status":False,
+            "data":"",
+        }
+    else:
+        data = {
+            "status":True,
+            "data":libList
+        }
+    return json.dumps(data)
+
+@app.route('/api/v1/queryEcard', methods=['POST'])
+def queryEcard():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    ecardInfo = analyse.getEcard(student_id, password)
+    ecardInfo = json.loads(ecardInfo.text)
+    if (ecardInfo['status'] == 200):
+        data = {
+            "status":True,
+            "data":ecardInfo['data']
+        }
+    else:
+        data = {
+            "status":False,
+            "data":"",
+        }
+    return json.dumps(data)
 
 from werkzeug.contrib.fixers import ProxyFix
 app.wsgi_app = ProxyFix(app.wsgi_app)

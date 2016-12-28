@@ -74,6 +74,8 @@
  > pip install -r requirements.txt
  
  > 安装node服务 :
+ 
+    yum install node 
    
     node -v
  

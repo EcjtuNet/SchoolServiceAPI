@@ -245,6 +245,7 @@ def getScoreFor14(username, year, term):
 
     result = soup.find_all("tr")[2:]
     scoreList = []
+    scoreInfoList = []
     for tr in result:
         td = tr.find_all("td")
         eleList = []
@@ -256,7 +257,17 @@ def getScoreFor14(username, year, term):
                 content = content.encode('gbk').replace('</font>','')
             eleList.append(content)
         scoreList.append(eleList)
-    return scoreList
+
+    for originScoreInfo in scoreList:
+        scoreInfo = {
+            'objectName': originScoreInfo[3],
+            'classRequirement': originScoreInfo[4],
+            'assessment': None,
+            'credit': originScoreInfo[5],
+            'score': originScoreInfo[6]
+        }
+        scoreInfoList.append(scoreInfo)
+    return scoreInfoList
 
 
 def getClassFor15(username, password, year, term):

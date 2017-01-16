@@ -46,7 +46,7 @@
     
  > 创建数据库
     mysql -u root -p
-    create database ss_ecjtu_tech character set utf8;
+    create database 数据库名 character set utf8;
     修改mysql的my.cnf
     
     [client]
@@ -87,7 +87,7 @@
     
     npm install -g pm2;
     
-    pm2 start app.js --name ss_ecjtu_tech
+    pm2 start app.js --name 进程名称
 
 > cd ..;python deploy.py
 
@@ -115,7 +115,7 @@
 
 > supervisord -c /etc/supervisord.conf
 
-> supervisorctl start ss_ecjtu_tech
+> supervisorctl start 配置名称
 ```
 
 ``option: 开机自动启动 Supervisord``

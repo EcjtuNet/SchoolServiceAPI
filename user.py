@@ -3,13 +3,16 @@
 from peewee import *
 
 import config
+from playhouse.pool import PooledMySQLDatabase
 
-mysql_db = MySQLDatabase(config.get('database_db_name'), **{'host': config.get('database_host'),
+
+mysql_db = PooledMySQLDatabase(config.get('database_db_name'), max_connections=8, stale_timeout=300,
+                                                            **{'host': config.get('database_host'),
                                                             'user': config.get('database_user'),
                                                             'password': config.get('database_password'),
                                                             'port': config.get('database_port'),
                                                             'charset': config.get('database_charset')}
-                         )
+                                )
 
 class BaseModel(Model):
     class Meta:

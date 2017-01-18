@@ -5,12 +5,22 @@ import time
 import json
 
 import analyse
-from user import User
+from user import User, mysql_db
 
 app = Flask(__name__)
 
-# get开头接口取自数据库
+@app.before_request
+def _db_connect():
+    mysql_db.connect()
+
+@app.teardown_request
+def _db_close(exc):
+    if not mysql_db.is_closed():
+        mysql_db.close()
+
+# confirm, get开头接口取自数据库
 # query开头接口实时获取
+
 @app.route('/api/v1/confirmName', methods=['POST'])
 def confirmName():
     student_id = request.form.get('student_id')
@@ -29,7 +39,6 @@ def confirmName():
     return json.dumps(data)
 
 
-# Todo验证密码
 @app.route('/api/v1/getName', methods=['POST'])
 def getName():
     student_id = request.form.get('student_id')
@@ -193,6 +202,8 @@ def queryExam():
     data['data']['exam_list'] = examList
     return json.dumps(data)
 
+
+# Todo
 @app.route('/api/v1/queryLib', methods=['POST'])
 def queryLib():
     student_id = request.form.get('student_id')
@@ -210,6 +221,8 @@ def queryLib():
         }
     return json.dumps(data)
 
+
+# Todo
 @app.route('/api/v1/queryEcard', methods=['POST'])
 def queryEcard():
     student_id = request.form.get('student_id')

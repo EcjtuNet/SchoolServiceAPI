@@ -2,6 +2,8 @@
 
 [apiary接口文档](http://docs.schoolservice.apiary.io/)
 
+[gitbook](https://superkevingit.gitbooks.io/skilltree/content/1%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E6%9C%8D%E5%8A%A1.html)
+
 ## 实现功能：
 
 * cas跳转登录智慧交大和教务系统

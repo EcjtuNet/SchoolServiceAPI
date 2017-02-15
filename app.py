@@ -176,7 +176,7 @@ def queryClass():
         return json.dumps(data)
     data['status'] = True
     data['data']['class_list'] = classList
-    return json.dumps(classList)
+    return json.dumps(data)
 
 
 @app.route('/api/v1/queryExam', methods=['POST'])

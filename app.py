@@ -155,16 +155,47 @@ def queryScore():
     return json.dumps(data)
 
 
+@app.route('/api/v1/queryDepartment', methods=['GET'])
+def queryDepartment():
+    dep_list = analyse.getDepartmentListFor14()
+    data = {
+        "status":"",
+        "data":{
+            "department_list":""
+        }
+    }
+    data['data']['department_list'] = dep_list
+    return json.dumps(data)
+
+
+@app.route('/api/v1/queryMajor', methods=['POST'])
+def queryMajor():
+    dep_value = request.form.get('dep_value')
+    year = request.form.get('year')
+    term = request.form.get('term')
+    grade = request.form.get('grade')
+    major_list = analyse.getMajorListFor14(dep_value, year, term, grade)
+    data = {
+        "status":"",
+        "data":{
+            "major_list":""
+        }
+    }
+    data['data']['major_list'] = major_list
+    return json.dumps(data)
+
 @app.route('/api/v1/queryClass', methods=['POST'])
 def queryClass():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
+    class_id = request.form.get('class_id')[:12]
+    grade = request.form.get('grade')
     year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
     term = request.form.get('term') if request.form.get('term') else '1'
     if (int(student_id[:4]) >= 2015):
         classList = analyse.getClassFor15(student_id, password, year, term)
     else:
-        classList = analyse.getClassFor14(student_id, year, term)
+        classList = analyse.getClassFor14(class_id, year, term, grade)
     data = {
         "status":"",
         "data":{

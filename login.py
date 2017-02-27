@@ -74,7 +74,7 @@ class Jwc:
 
 
     @classmethod
-    def score_login(self):
+    def score_login(cls):
         page = requests.post('http://jwc.ecjtu.jx.cn/mis_o/login.php',
                              {"user": "jwc", "pass": "jwc"}
                              )
@@ -84,13 +84,44 @@ class Jwc:
     @classmethod
     def fetch_score(cls, username, cookies, year, term):
         page = requests.post('http://jwc.ecjtu.jx.cn/mis_o/query.php',
-                            {"StuID": username,
-                             "Term": year+'.'+term},
+                            {
+                                "StuID": username,
+                                "Term": year+'.'+term
+                            },
                             cookies=cookies,
                              )
         page.encoding = 'gbk'
         return page.text
 
+
+    @classmethod
+    def fetch_class_page(cls):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/classroom/class.jsp')
+        page.encoding = 'gbk'
+        return page.text
+
+    @classmethod
+    def fetch_major_list(cls, dep_value, year, term, grade):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/classroom/class.jsp',
+                            {
+                                "depart": dep_value,
+                                "nianji": grade,
+                                "term": year+"."+term
+                            })
+        page.encoding = 'gbk'
+        return page.text
+
+
+    @classmethod
+    def fetch_class_list(cls, class_id, year, term, grade):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/classroom/class.jsp',
+                            {
+                                "nianji": grade,
+                                "term": year+"."+term,
+                                "banji": class_id
+                            })
+        page.encoding = 'gbk'
+        return page.text
 
 # 图书馆
 class Lib:

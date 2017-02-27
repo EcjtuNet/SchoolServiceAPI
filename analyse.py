@@ -54,6 +54,7 @@ def login_lib(username, password):
     return login_cookie
 
 
+# 实时测试密码正确性
 def testPassword(username, password):
     lt = cas.get_lt_value(headers, login_url)
     result = cas.get_ticket_url(config.get('headers'), login_url, payload,
@@ -66,6 +67,7 @@ def testPassword(username, password):
     return result
 
 
+# 存储边缘信息
 def saveStudentInfo(username, password):
     info_url = "http://portal.ecjtu.edu.cn/dcp/profile/profile.action"
     cookies = login_portal(username, password)
@@ -92,7 +94,7 @@ def saveStudentInfo(username, password):
     return user
 
 
-# 获取所有班级名单
+# 获取所有15以后班级名单
 def getStudentList(username, password):
     url = "http://jwxt.ecjtu.jx.cn/infoQuery/class_findClassList.action"
     cookie = login_jwxt(username, password)
@@ -147,7 +149,8 @@ def getStudentList(username, password):
                     User.addUser(info)
     return
 
-# 获取所有14及以前班级名单
+
+# 获取所有14及以前班级名单（不需要使用）
 def get_student_list_for_14():
     url = "http://jwc.ecjtu.jx.cn:8080/jwcmis/stuquery.jsp"
     html = requests.get(url).text
@@ -205,6 +208,7 @@ def get_student_list_for_14():
                             'student_status' : td[4].text
                         }
     return
+
 
 def getScoreFor15(username, password, year, term):
     cookie = login_jwxt(username, password)
@@ -300,8 +304,33 @@ def getClassFor15(username, password, year, term):
     }
     return classInfo
 
-# Todo
-def getClassFor14(username, year, term):
+
+def getDepartmentListFor14():
+    html = jwc.fetch_class_page()
+    soup = BeautifulSoup(html, "lxml")
+    departments = soup.find_all("select",{"name": "depart"})[0].find_all("option")
+    depart_list = {}
+    for department in departments:
+        depart_list[department.string] = department["value"]
+    return depart_list
+
+
+def getMajorListFor14(dep_value, year, term, grade):
+    html = jwc.fetch_major_list(dep_value, year, term, grade)
+    soup = BeautifulSoup(html, "lxml")
+    majors = soup.find_all("select",{"name": "banji"})[0].find_all("option")
+    major_list = {}
+    for major in majors:
+        major_list[major.string] = major["value"]
+    return major_list
+
+
+def getClassFor14(class_id, year, term, grade):
+    html = jwc.fetch_class_list(class_id, year, term, grade)
+    soup = BeautifulSoup(html, "lxml")
+    row_classes_list = soup.find_all("tr")[1:]
+    for row_classes in row_classes_list:
+        print row_classes
     return
 
 

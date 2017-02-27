@@ -315,6 +315,7 @@ def getDepartmentListFor14():
     return depart_list
 
 
+
 def getMajorListFor14(dep_value, year, term, grade):
     html = jwc.fetch_major_list(dep_value, year, term, grade)
     soup = BeautifulSoup(html, "lxml")
@@ -329,9 +330,26 @@ def getClassFor14(class_id, year, term, grade):
     html = jwc.fetch_class_list(class_id, year, term, grade)
     soup = BeautifulSoup(html, "lxml")
     row_classes_list = soup.find_all("tr")[1:]
-    for row_classes in row_classes_list:
-        print row_classes
-    return
+    classInfoList = []
+    for i in [0,1,2,3,4]:
+        originClassInfo = row_classes_list[i].find_all('td')
+        singleClassInfoList = []
+        for j in [1,2,3,4,5,6,7]:
+            singleClassInfo = originClassInfo[j].get_text().replace('</br>','')
+            singleClassInfoList.append(singleClassInfo)
+        classInfoList.append(singleClassInfoList)
+    monday,tuesday,wednesday,thursday,friday,saturday,sunday = zip(*classInfoList)
+
+    classInfo = {
+        'monday':monday,
+        'tuesday':tuesday,
+        'wednesday':wednesday,
+        'thursday':thursday,
+        'friday':friday,
+        'saturday':saturday,
+        'sunday':sunday
+    }
+    return classInfo
 
 
 def getExamFor15(username, password, year, term):

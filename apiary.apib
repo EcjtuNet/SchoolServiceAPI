@@ -236,6 +236,59 @@ HOST: http://ss.ecjtu.net/api/v1
               }
             }
             
+## 抓取学院列表 [/queryDepartment]
+
+### queryDepartment [GET]
++ Request (application/x-www-form-urlencoded)
+
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+    
+            {
+              "status": true,
+              "data": {
+                    "department_list": {
+                      "经济管理学院": "",
+                      "学工处": "",
+                      "软件学院": "21",
+                      "外国语学院": "09",
+                      "轨道交通职业技术学院": "51",
+                      "艺术学院": "11",
+                      "人文社会科学学院": "07",
+                      "电气与自动化工程学院": "02",
+                      "土木建筑学院": "01",
+                      "..."
+            }
+            
+## 抓取专业列表 [/queryMajor]
+
+### queryMajor [POST]
++ Request (application/x-www-form-urlencoded)
+            
+            {
+                "dep_value":"21",
+                "year":"2016",
+                "term":"2",
+                "grade":"2014"
+            }
+            
++ Response 200 (text/html; charset=utf-8)
+
+    + Body
+    
+            {
+              "status": true,
+              "data": {
+                "major_list": {
+                  "软件+交通运输2014-1": "201421101...",
+                  "软件+交通运输2014-2": "201421101...",
+                  "软件+轨道交通信号2014-2": "201421101...",
+                  "软件+会计2014-1": "20142110..."
+                }
+              }
+            }
+        
 ## 抓取课表 [/queryClass]
 
 ### queryClass [POST]
@@ -245,7 +298,9 @@ HOST: http://ss.ecjtu.net/api/v1
                 "student_id":"2015...",
                 "password":"...",
                 "year":"2016",
-                "term":"1"
+                "term":"1",
+                "class_id":"2014211009..",
+                "grade":"2014"
             }
             
 + Response 200 (text/html; charset=utf-8)

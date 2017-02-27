@@ -319,7 +319,7 @@ def getDepartmentListFor14():
 def getMajorListFor14(dep_value, year, term, grade):
     html = jwc.fetch_major_list(dep_value, year, term, grade)
     soup = BeautifulSoup(html, "lxml")
-    majors = soup.find_all("select",{"name": "banji"})[0].find_all("option")
+    majors = soup.find_all("select",{"name": "banji"})[0].find_all("option")[1:]
     major_list = {}
     for major in majors:
         major_list[major.string] = major["value"]

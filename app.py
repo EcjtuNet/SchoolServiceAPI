@@ -164,14 +164,15 @@ def queryDepartment():
             "department_list":""
         }
     }
+    data['status'] = True
     data['data']['department_list'] = dep_list
     return json.dumps(data)
 
 
 @app.route('/api/v1/queryMajor', methods=['POST'])
 def queryMajor():
-    dep_value = request.form.get('dep_value')
     year = request.form.get('year')
+    dep_value = request.form.get('dep_value')
     term = request.form.get('term')
     grade = request.form.get('grade')
     major_list = analyse.getMajorListFor14(dep_value, year, term, grade)
@@ -181,6 +182,7 @@ def queryMajor():
             "major_list":""
         }
     }
+    data['status'] = True
     data['data']['major_list'] = major_list
     return json.dumps(data)
 

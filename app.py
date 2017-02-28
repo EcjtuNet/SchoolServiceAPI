@@ -182,6 +182,9 @@ def queryMajor():
             "major_list":""
         }
     }
+    if not major_list:
+        data['status'] = False
+        return json.dumps(data)
     data['status'] = True
     data['data']['major_list'] = major_list
     return json.dumps(data)

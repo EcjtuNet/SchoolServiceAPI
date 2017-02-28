@@ -309,9 +309,9 @@ def getDepartmentListFor14():
     html = jwc.fetch_class_page()
     soup = BeautifulSoup(html, "lxml")
     departments = soup.find_all("select",{"name": "depart"})[0].find_all("option")
-    depart_list = {}
+    depart_list = []
     for department in departments:
-        depart_list[department.string] = department["value"]
+        depart_list.append({"dep_name": department.string, "dep_value": department["value"]})
     return depart_list
 
 
@@ -320,9 +320,9 @@ def getMajorListFor14(dep_value, year, term, grade):
     html = jwc.fetch_major_list(dep_value, year, term, grade)
     soup = BeautifulSoup(html, "lxml")
     majors = soup.find_all("select",{"name": "banji"})[0].find_all("option")[1:]
-    major_list = {}
+    major_list = []
     for major in majors:
-        major_list[major.string] = major["value"]
+        major_list.append({"major_name": major.string, "major_value": major["value"]})
     return major_list
 
 

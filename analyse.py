@@ -54,6 +54,18 @@ def login_lib(username, password):
     return login_cookie
 
 
+# 一卡通
+def login_ecard(username, password):
+    lt = cas.get_ticket_url(headers, login_url)
+    encodeService = ""
+    service = "http://ecard.ecjtu.jx.cn/hdjtdrPortalHome.action"
+    ticket_url = cas.get_ticket_url(headers, login_url, payload,
+                                    encodeService, service,
+                                    username, password, lt)
+    login_cookie = cas.get_login_cookie(ticket_url, headers)
+    return login_cookie
+
+
 # 实时测试密码正确性
 def testPassword(username, password):
     lt = cas.get_lt_value(headers, login_url)

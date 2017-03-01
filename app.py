@@ -193,8 +193,8 @@ def queryMajor():
 def queryClass():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
-    class_id = request.form.get('class_id')[:12]
-    grade = request.form.get('grade')
+    class_id = request.form.get('class_id')[:12] if request.form.get('class_id') else ''
+    grade = request.form.get('grade') if request.form.get('grade') else ''
     year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
     term = request.form.get('term') if request.form.get('term') else '1'
     if (int(student_id[:4]) >= 2015):

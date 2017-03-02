@@ -171,11 +171,9 @@ def queryDepartment():
 
 @app.route('/api/v1/queryMajor', methods=['POST'])
 def queryMajor():
-    year = request.form.get('year')
     dep_value = request.form.get('dep_value')
-    term = request.form.get('term')
     grade = request.form.get('grade')
-    major_list = analyse.getMajorListFor14(dep_value, year, term, grade)
+    major_list = analyse.getMajorListFor14(dep_value, grade)
     data = {
         "status":"",
         "data":{

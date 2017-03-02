@@ -300,7 +300,50 @@ def getClassFor15(username, password, year, term):
         originClassInfo = trList[i].find_all('td')
         singleClassInfoList = []
         for j in [1,2,3,4,5,6,7]:
-            singleClassInfo = originClassInfo[j].get_text().replace('</br>','')
+            singleClassInfo = []
+            a = originClassInfo[j].get_text("|", strip=True).split('|')
+            if len(a[0]) > 0:
+                if len(a) < 3:
+                    singleClassInfo = [
+                        {
+                            "class_name": a[0],
+                            "class_teacher": a[1].split(' ')[0],
+                            "class_room": None,
+                            "class_week": a[1].split(' ')[1],
+                            "class_type": None,
+                            "class_time": a[1].split(' ')[2]
+                        }
+                    ]
+                elif len(a) > 3:
+                    singleClassInfo = [
+                        {
+                            "class_name": a[0],
+                            "class_teacher": a[1].split(' ')[0],
+                            "class_room": a[1].split(' ')[1],
+                            "class_week": a[2].split(' ')[0][:-3],
+                            "class_type": a[2].split(' ')[0][-3:-1],
+                            "class_time": a[2].split('  ')[1]
+                        },
+                        {
+                            "class_name": a[3],
+                            "class_teacher": a[4].split(' ')[0],
+                            "class_room": a[4].split(' ')[1],
+                            "class_week": a[5].split(' ')[0][:-3],
+                            "class_type": a[5].split(' ')[0][-3:-1],
+                            "class_time": a[5].split('  ')[1]
+                        }
+                    ]
+                else:
+                    singleClassInfo = [
+                        {
+                        "class_name": a[0],
+                        "class_teacher": a[1].split(' ')[0],
+                        "class_room": a[1].split(' ')[1],
+                        "class_week": a[2].split(' ')[0],
+                        "class_type": None,
+                        "class_time": a[2].split('  ')[1]
+                        }
+                    ]
             singleClassInfoList.append(singleClassInfo)
         classInfoList.append(singleClassInfoList)
     monday,tuesday,wednesday,thursday,friday,saturday,sunday = zip(*classInfoList)
@@ -328,8 +371,8 @@ def getDepartmentListFor14():
 
 
 
-def getMajorListFor14(dep_value, year, term, grade):
-    html = jwc.fetch_major_list(dep_value, year, term, grade)
+def getMajorListFor14(dep_value, grade):
+    html = jwc.fetch_major_list(dep_value, grade)
     soup = BeautifulSoup(html, "lxml")
     majors = soup.find_all("select",{"name": "banji"})[0].find_all("option")[1:]
     major_list = []
@@ -347,7 +390,15 @@ def getClassFor14(class_id, year, term, grade):
         originClassInfo = row_classes_list[i].find_all('td')
         singleClassInfoList = []
         for j in [1,2,3,4,5,6,7]:
-            singleClassInfo = originClassInfo[j].get_text().replace('</br>','')
+            a= originClassInfo[j].get_text("|", strip=True).split('|')
+            singleClassInfo = {}
+            if a[0]:
+                singleClassInfo = {
+                    "class_name": a[1],
+                    "class_teacher": a[2].split(' ')[0],
+                    "class_room": a[2].split(' ')[1],
+                    "class_week": a[3].split(' ')[0]
+                }
             singleClassInfoList.append(singleClassInfo)
         classInfoList.append(singleClassInfoList)
     monday,tuesday,wednesday,thursday,friday,saturday,sunday = zip(*classInfoList)
@@ -399,7 +450,6 @@ def getExamFor15(username, password, year, term):
     return examInfoList
 
 
-# Todo
 def getExamFor14(class_id):
     html = jwc.get_exam_list(class_id)
     soup = BeautifulSoup(html, "lxml")

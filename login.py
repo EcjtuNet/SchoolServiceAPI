@@ -101,12 +101,11 @@ class Jwc:
         return page.text
 
     @classmethod
-    def fetch_major_list(cls, dep_value, year, term, grade):
+    def fetch_major_list(cls, dep_value, grade):
         page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/classroom/class.jsp',
                             {
                                 "depart": dep_value,
                                 "nianji": grade,
-                                "term": year+"."+term
                             })
         page.encoding = 'gbk'
         return page.text

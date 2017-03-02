@@ -404,6 +404,8 @@ def getExamFor14(class_id):
     html = jwc.get_exam_list(class_id)
     soup = BeautifulSoup(html, "lxml")
     table = soup.find_all("table")
+    if len(table) == 1:
+        return 'error'
     exams = table[1].find_all("tr")
     examInfoList = []
     for exam in exams:

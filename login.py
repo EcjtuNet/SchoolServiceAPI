@@ -123,6 +123,16 @@ class Jwc:
         page.encoding = 'gbk'
         return page.text
 
+    @classmethod
+    def get_exam_list(cls, class_id):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/examarrange.jsp',
+                            {
+                                'classid': class_id,
+                                "Submit": "%CC%E1%BD%BB"
+                            })
+        page.encoding = 'GBK'
+        return page.text
+
 # 图书馆
 class Lib:
     def __init__(self):

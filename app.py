@@ -217,14 +217,15 @@ def queryClass():
 
 @app.route('/api/v1/queryExam', methods=['POST'])
 def queryExam():
-    student_id = request.form.get('student_id')
-    password = request.form.get('password')
+    student_id = request.form.get('student_id') if request.form.get('student_id') else ''
+    password = request.form.get('password') if request.form.get('password') else ''
     year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y', time.localtime(time.time()))) - 1)
     term = request.form.get('term') if request.form.get('term') else '1'
+    class_id = request.form.get('class_id')[:12] if request.form.get('class_id') else ''
     if (int(student_id[:4]) >= 2015):
         examList = analyse.getExamFor15(student_id, password, year, term)
     else:
-        examList = analyse.getExamFor14(student_id, year, term)
+        examList = analyse.getExamFor14(class_id)
     data = {
         "status":"",
         "data":{

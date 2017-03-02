@@ -381,13 +381,18 @@ def getExamFor15(username, password, year, term):
         singleExamInfoList = []
         for j in range(8):
             singleExamInfoList = {
-                '课程名称': tdList[1].string,
-                '课程性质': tdList[2].string,
-                '班级名称': tdList[3].string,
-                '学生人数': tdList[4].string,
-                '考试周次': tdList[5].string,
-                '考试时间': tdList[6].string,
-                '考试地点': tdList[7].string
+                'major_name': tdList[1].string,
+                'major_type': tdList[2].string,
+                'class_name': tdList[3].string,
+                'total_student': tdList[4].string,
+                'exam_week': tdList[5].string,
+                'exam_time': tdList[6].string,
+                'exam_place': tdList[7].string,
+                'exam_number': tdList[8].string,
+                'teacher':{
+                    'main_teacher': {'name': None, 'dep': None},
+                    'assist_teacher': {'name': None, 'dep': None}
+                }
             }
         examInfoList.append(singleExamInfoList)
 
@@ -395,8 +400,33 @@ def getExamFor15(username, password, year, term):
 
 
 # Todo
-def getExamFor14(username, year, term):
-    return
+def getExamFor14(class_id):
+    html = jwc.get_exam_list(class_id)
+    soup = BeautifulSoup(html, "lxml")
+    table = soup.find_all("table")
+    exams = table[1].find_all("tr")
+    examInfoList = []
+    for exam in exams:
+        items = exam.find_all("td")
+        singleExamInfoList = {
+            'major_name': clean_exam(items[1]),
+            'major_type': None,
+            'class_name': clean_exam(items[0]),
+            'total_student': None,
+            'exam_week': clean_exam(items[3]),
+            'exam_time': clean_exam(items[4]),
+            'exam_place': clean_exam(items[5]),
+            'exam_number': None,
+            'teacher': {
+                'main_teacher': {'name': clean_exam(items[6]), 'dep': clean_exam(items[7])},
+                'assist_teacher': {'name': clean_exam(items[8]), 'dep': clean_exam(items[9])},
+            }
+        }
+        examInfoList.append(singleExamInfoList)
+    return examInfoList
+
+def clean_exam(item):
+    return item.find_all("font")[0].string
 
 # Todo
 def getLib(student_id, password):

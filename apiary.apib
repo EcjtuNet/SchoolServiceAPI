@@ -15,6 +15,8 @@ HOST: http://ss.ecjtu.net/api/v1
         {
             "student_id":"2015..."
         }
+        
+        student_id 学号
 
 + Response 200 (text/html; charset=utf-8)
 
@@ -34,6 +36,9 @@ HOST: http://ss.ecjtu.net/api/v1
                 }
             }
             
+            status 请求状态
+            data.name 不完整姓名
+            
 ## 获取姓名 [/getName] 
 
 ### getName [POST]
@@ -45,6 +50,9 @@ HOST: http://ss.ecjtu.net/api/v1
             "student_id":"2015...",
             "password":"..."
         }
+        
+        student_id 学号
+        password 智慧交大密码
 
 + Response 200 (text/html; charset=utf-8)
 
@@ -63,6 +71,9 @@ HOST: http://ss.ecjtu.net/api/v1
                     "name": ""
                 }
             }
+            
+            status 请求状态
+            data.name 完整姓名
 
 ## 绑定密码 [/savePassword]
 
@@ -74,6 +85,9 @@ HOST: http://ss.ecjtu.net/api/v1
                 "student_id":"2015...",
                 "password":"..."
             }
+            
+            student_id 学号
+            password 智慧交大密码
             
 + Response 200 (text/html; charset=utf-8)
 
@@ -93,6 +107,9 @@ HOST: http://ss.ecjtu.net/api/v1
                 }
             }
             
+            status 请求状态
+            data.result 回复提示
+            
 ## 抓取用户信息 [/saveInfo]
 
 ### saveInfo [POST]
@@ -103,6 +120,9 @@ HOST: http://ss.ecjtu.net/api/v1
                 "student_id":"2015...",
                 "password":"..."
             }
+            
+            student_id 学号
+            password 智慧交大密码
             
 + Response 200 (text/html; charset=utf-8)
 
@@ -138,11 +158,30 @@ HOST: http://ss.ecjtu.net/api/v1
                 }
             }
             
+            status 请求状态
+            data.user.major 专业
+            data.user.student_status 学籍状态
+            data.user.name 姓名
+            data.user.grade 年级
+            data.user.student_id 学号
+            data.user.card_id 身份证号
+            data.user.bound 是否绑定密码
+            data.user.sex 性别
+            data.user.class_id 在班编号
+            data.user.birthday 生日
+            data.user.mobile 手机号
+            data.user.ecard_id 一卡通号
+            data.user.department 学院
+            data.user.password 智慧交大密码
+            data.user.id 用户数据库序号
+            
 ## 获取用户详细信息 [/getInfo]
 
-### getInfo [POST]
+说明：
 
- 使用前需要成功调用savePassword接口
+使用前需要成功调用savePassword接口
+
+### getInfo [POST]
 
 + Request (application/x-www-form-urlencoded)
 
@@ -150,6 +189,9 @@ HOST: http://ss.ecjtu.net/api/v1
                 "student_id":"2015...",
                 "password":"..."
             }
+            
+            student_id 学号
+            password 智慧交大密码
             
 + Response 200 (text/html; charset=utf-8)
 
@@ -182,6 +224,21 @@ HOST: http://ss.ecjtu.net/api/v1
                     "info": ""
                 }
             }
+            
+            status 请求状态
+            data.user.major 专业
+            data.user.grade 年级
+            data.user.bound 是否绑定密码
+            data.user.sex 性别
+            data.user.birthday 生日
+            data.user.student_status 学籍状态
+            data.user.name 姓名
+            data.user.class_id 在班编号
+            data.user.student_id 学号
+            data.user.card_id 身份证号
+            data.user.mobile 手机号
+            data.user.ecard_id 一卡通号
+            data.user.department 学院
         
 ## 抓取成绩 [/queryScore]
 
@@ -195,6 +252,11 @@ HOST: http://ss.ecjtu.net/api/v1
                 "year":"2015",
                 "term":"2"
             }
+            
+            student_id 学号
+            password 智慧交大密码
+            year 查询年份
+            term 查询学期
             
 + Response 200 (text/html; charset=utf-8)
 
@@ -236,9 +298,17 @@ HOST: http://ss.ecjtu.net/api/v1
               }
             }
             
+            status 请求状态
+            data.score_list.classRequirement 课程类型
+            data.score_list.score 成绩
+            data.score_list.assessment 考查方式
+            data.score_list.objectName 课程名称
+            data.score_list.credit 学分
+            
 ## 抓取学院列表 [/queryDepartment]
 
 ### queryDepartment [GET]
+
 + Request (application/x-www-form-urlencoded)
 
 + Response 200 (text/html; charset=utf-8)
@@ -267,17 +337,24 @@ HOST: http://ss.ecjtu.net/api/v1
                           }
             }
             
+            status 请求状态
+            data.department_list.dep_value 学院代号
+            data.department_list.dep_name 学院名
+            
 ## 抓取专业列表 [/queryMajor]
 
 ### queryMajor [POST]
+
 + Request (application/x-www-form-urlencoded)
             
             {
                 "dep_value":"21",
-                "year":"2016",
-                "term":"2",
                 "grade":"2014"
             }
+            
+            dep_value 学院代号
+            grade 年级
+            
             
 + Response 200 (text/html; charset=utf-8)
 
@@ -313,10 +390,20 @@ HOST: http://ss.ecjtu.net/api/v1
                 "major_list": ""
               }
             }
+            
+            status 请求状态
+            data.major_list.major_name 专业班级名称
+            data.major_list.major_value 专业代号
         
 ## 抓取课表 [/queryClass]
+说明：
+
+15级提供 student_id,password[,year,term] 参数
+
+14级提供 student_id,class_id,grade[,year,term] 参数
 
 ### queryClass [POST]
+
 + Request (application/x-www-form-urlencoded)
 
             {
@@ -327,6 +414,12 @@ HOST: http://ss.ecjtu.net/api/v1
                 "class_id":"2014211009..",
                 "grade":"2014"
             }
+            
+            student_id 学号
+            password 智慧交大密码
+            year 查询年份
+            term 查询学期
+            class_id 在班编号或专业班级编号
             
 + Response 200 (text/html; charset=utf-8)
 
@@ -345,52 +438,52 @@ HOST: http://ss.ecjtu.net/api/v1
                         " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11"
                     ],
                     "tuesday": [
-                    " 大学英语Ⅲ陈蔚 @31-3181-12  1,2",
-                    " Java程序设计(A)严丽平 @31-6171-16(单) 3,4",
-                    " Web 应用设计基础（A）张薇 @31-5301-16  5,6,7",
-                    " Web 应用设计基础（A）张薇 @31-5301-16  5,6,7",
-                    " ",
-                    " "
+                        " 大学英语Ⅲ陈蔚 @31-3181-12  1,2",
+                        " Java程序设计(A)严丽平 @31-6171-16(单) 3,4",
+                        " Web 应用设计基础（A）张薇 @31-5301-16  5,6,7",
+                        " Web 应用设计基础（A）张薇 @31-5301-16  5,6,7",
+                        " ",
+                        " "
                     ],
                   "friday": [
-                    " ",
-                    " 大学英语Ⅲ陈蔚 @31-6161-12  3,4",
-                    " 数据库系统原理 （A）魏永丰 @31-5201-16  5,6",
-                    " 软件工程（A）汤文亮 @31-2011-16  7,8",
-                    " ",
-                    " "
+                        " ",
+                        " 大学英语Ⅲ陈蔚 @31-6161-12  3,4",
+                        " 数据库系统原理 （A）魏永丰 @31-5201-16  5,6",
+                        " 软件工程（A）汤文亮 @31-2011-16  7,8",
+                        " ",
+                        " "
                   ],
                   "wednesday": [
-                    " 概率论与数理统计朱惠倩 @31-2021-16(单) 1,2软件工程（A）汤文亮 @31-2221-16(双) 1,2",
-                    " 数据库系统原理 （A）魏永丰 @31-5201-16  3,4",
-                    " 中国近现代史纲要张昭国 @31-3171-12  5,6",
-                    " ",
-                    " ",
-                    " "
+                        " 概率论与数理统计朱惠倩 @31-2021-16(单) 1,2软件工程（A）汤文亮 @31-2221-16(双) 1,2",
+                        " 数据库系统原理 （A）魏永丰 @31-5201-16  3,4",
+                        " 中国近现代史纲要张昭国 @31-3171-12  5,6",
+                        " ",
+                        " ",
+                        " "
                   ],
                   "thursday": [
-                    " Java程序设计(A)严丽平 @31-6081-16  1,2",
-                    " 计算方法 （A）向华萍 @31-3241-16  3,4",
-                    " ",
-                    " ",
-                    " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11",
-                    " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11"
+                        " Java程序设计(A)严丽平 @31-6081-16  1,2",
+                        " 计算方法 （A）向华萍 @31-3241-16  3,4",
+                        " ",
+                        " ",
+                        " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11",
+                        " 高等数学(A)Ⅰ宋庆华 @14-2121-16  9,10,11"
                   ],
                   "sunday": [
-                    " ",
-                    " ",
-                    " ",
-                    " ",
-                    " ",
-                    " "
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " "
                   ],
                   "saturday": [
-                    " ",
-                    " ",
-                    " ",
-                    " ",
-                    " ",
-                    " "
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " "
                   ]
                 }
               }
@@ -402,8 +495,17 @@ HOST: http://ss.ecjtu.net/api/v1
                 "class_list": ""
               }
             }
+            
+            status 请求状态
+            data.class_list.{monday,sunday} 课程列表
     
 ## 抓取考试安排  [/queryExam]
+
+说明：
+
+15级提供 student_id,password[,year,term]
+
+14级提供 student_id,class_id
 
 ### queryExam [POST]
 + Request (application/x-www-form-urlencoded)
@@ -412,8 +514,15 @@ HOST: http://ss.ecjtu.net/api/v1
                 "student_id":"2015...",
                 "password":"...",
                 "year":"2016",
-                "term":"1"
+                "term":"1",
+                "class_id":""
             }
+            
+            student_id 学号
+            password 智慧交大密码
+            year 查询年份
+            term 查询学期
+            class_id 在班编号或专业班级编号
             
 + Response 200 (text/html; charset=utf-8)
 
@@ -424,22 +533,44 @@ HOST: http://ss.ecjtu.net/api/v1
               "data": {
                 "exam_list": [
                   {
-                    "课程性质": "必修课",
-                    "考试地点": "14-418",
-                    "班级名称": "高等数学(A)Ⅰ(20161-28)【小2班】",
-                    "考试时间": "2017年01月10日(星期二)14:00-16:00",
-                    "考试周次": "20",
-                    "学生人数": "32",
-                    "课程名称": "高等数学(A)Ⅰ"
+                    "major_type": null,
+                    "exam_week": "14",
+                    "major_name": "土力学（A）",
+                    "class_name": "土木(建工)2014-2",
+                    "exam_place": "14-110",
+                    "exam_number": null,
+                    "teacher": {
+                      "assist_teacher": {
+                        "dep": "土木",
+                        "name": "郑xx"
+                      },
+                      "main_teacher": {
+                        "dep": "土木",
+                        "name": "胡xx"
+                      }
+                    },
+                    "exam_time": "12月02日(星期五)14:00-16:00",
+                    "total_student": null
                   },
                   {
-                    "课程性质": "必修课",
-                    "考试地点": "31-317",
-                    "班级名称": "VB级(2015-3)【小1班】",
-                    "考试时间": "2017年01月10日(星期二)08:00-10:00",
-                    "考试周次": "20",
-                    "学生人数": "34",
-                    "课程名称": "大学英语Ⅲ"
+                    "major_type": null,
+                    "exam_week": "17",
+                    "major_name": "结构力学(A)",
+                    "class_name": "土木(建工)2014-2",
+                    "exam_place": "图203",
+                    "exam_number": null,
+                    "teacher": {
+                      "assist_teacher": {
+                        "dep": "土木",
+                        "name": "韩xx"
+                      },
+                      "main_teacher": {
+                        "dep": "土木",
+                        "name": "严xx"
+                      }
+                    },
+                    "exam_time": "12月19日(星期一)08:00-10:00",
+                    "total_student": null
                   }
                 ]
               }
@@ -451,3 +582,17 @@ HOST: http://ss.ecjtu.net/api/v1
                 "exam_list": ""
               }
             }
+            
+            status 请求状态
+            data.exam_list.major_type 课程类别
+            data.exam_list.exam_week 考试周
+            data.exam_list.major_name 课程名称
+            data.exam_list.class_name 班级名称
+            data.exam_list.exam_place 考试地点
+            data.exam_list.exam_number 小班编号
+            data.exam_list.teacher.main_teacher.dep 主监考老师学院
+            data.exam_list.teacher.main_teacher.name 主监考老师姓名
+            data.exam_list.teacher.assist_teacher.dep 副监考老师学院
+            data.exam_list.teacher.assist_teacher.name 副监考老师姓名
+            data.exam_list.exam_time 考试时间
+            data.exam_list.total_student 本班考试总人数

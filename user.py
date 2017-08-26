@@ -3,13 +3,16 @@
 from peewee import *
 
 import config
+from playhouse.pool import PooledMySQLDatabase
 
-mysql_db = MySQLDatabase(config.get('database_db_name'), **{'host': config.get('database_host'),
+
+mysql_db = PooledMySQLDatabase(config.get('database_db_name'), max_connections=8, stale_timeout=300,
+                                                            **{'host': config.get('database_host'),
                                                             'user': config.get('database_user'),
                                                             'password': config.get('database_password'),
                                                             'port': config.get('database_port'),
                                                             'charset': config.get('database_charset')}
-                         )
+                                )
 
 class BaseModel(Model):
     class Meta:
@@ -18,14 +21,15 @@ class BaseModel(Model):
 
 class User(BaseModel):
     id = PrimaryKeyField()
-    department = CharField()
-    grade = CharField()
-    major = CharField()
     name = CharField()
-    sex = CharField()
-    class_id = CharField()
     student_id = CharField()
-    student_status = CharField()
+    department = CharField(null=True)
+    grade = CharField(null=True)
+    major = CharField(null=True)
+    sex = CharField(null=True)
+    class_id = CharField(null=True)
+    cas_id = CharField(null=True)
+    student_status = CharField(null=True)
     card_id = CharField(null=True)
     ecard_id = CharField(null=True)
     birthday = CharField(null=True)

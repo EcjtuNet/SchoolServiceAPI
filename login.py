@@ -74,7 +74,7 @@ class Jwc:
 
 
     @classmethod
-    def score_login(self):
+    def score_login(cls):
         page = requests.post('http://jwc.ecjtu.jx.cn/mis_o/login.php',
                              {"user": "jwc", "pass": "jwc"}
                              )
@@ -84,13 +84,53 @@ class Jwc:
     @classmethod
     def fetch_score(cls, username, cookies, year, term):
         page = requests.post('http://jwc.ecjtu.jx.cn/mis_o/query.php',
-                            {"StuID": username,
-                             "Term": year+'.'+term},
+                            {
+                                "StuID": username,
+                                "Term": year+'.'+term
+                            },
                             cookies=cookies,
                              )
         page.encoding = 'gbk'
         return page.text
 
+
+    @classmethod
+    def fetch_class_page(cls):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/classroom/class.jsp')
+        page.encoding = 'gbk'
+        return page.text
+
+    @classmethod
+    def fetch_major_list(cls, dep_value, grade):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/classroom/class.jsp',
+                            {
+                                "depart": dep_value,
+                                "nianji": grade,
+                            })
+        page.encoding = 'gbk'
+        return page.text
+
+
+    @classmethod
+    def fetch_class_list(cls, class_id, year, term, grade):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/classroom/class.jsp',
+                            {
+                                "nianji": grade,
+                                "term": year+"."+term,
+                                "banji": class_id
+                            })
+        page.encoding = 'gbk'
+        return page.text
+
+    @classmethod
+    def get_exam_list(cls, class_id):
+        page = requests.get('http://jwc.ecjtu.jx.cn:8080/jwcmis/examarrange.jsp',
+                            {
+                                'classid': class_id,
+                                "Submit": "%CC%E1%BD%BB"
+                            })
+        page.encoding = 'GBK'
+        return page.text
 
 # 图书馆
 class Lib:

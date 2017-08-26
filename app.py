@@ -5,12 +5,22 @@ import time
 import json
 
 import analyse
-from user import User
+from user import User, mysql_db
 
 app = Flask(__name__)
 
-# get开头接口取自数据库
+@app.before_request
+def _db_connect():
+    mysql_db.connect()
+
+@app.teardown_request
+def _db_close(exc):
+    if not mysql_db.is_closed():
+        mysql_db.close()
+
+# confirm, get开头接口取自数据库
 # query开头接口实时获取
+
 @app.route('/api/v1/confirmName', methods=['POST'])
 def confirmName():
     student_id = request.form.get('student_id')
@@ -29,7 +39,6 @@ def confirmName():
     return json.dumps(data)
 
 
-# Todo验证密码
 @app.route('/api/v1/getName', methods=['POST'])
 def getName():
     student_id = request.form.get('student_id')
@@ -146,6 +155,7 @@ def queryScore():
     return json.dumps(data)
 
 
+<<<<<<< HEAD
 @app.route('/api/v1/queryTodaySchedule', methods=['POST'])
 def queryTodaySchedule():
     student_id = request.form.get('student_id')
@@ -167,16 +177,52 @@ def queryTodaySchedule():
     return json.dumps(data)
 
 
+=======
+@app.route('/api/v1/queryDepartment', methods=['GET'])
+def queryDepartment():
+    dep_list = analyse.getDepartmentListFor14()
+    data = {
+        "status":"",
+        "data":{
+            "department_list":""
+        }
+    }
+    data['status'] = True
+    data['data']['department_list'] = dep_list
+    return json.dumps(data)
+
+
+@app.route('/api/v1/queryMajor', methods=['POST'])
+def queryMajor():
+    dep_value = request.form.get('dep_value')
+    grade = request.form.get('grade')
+    major_list = analyse.getMajorListFor14(dep_value, grade)
+    data = {
+        "status":"",
+        "data":{
+            "major_list":""
+        }
+    }
+    if not major_list:
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['major_list'] = major_list
+    return json.dumps(data)
+
+>>>>>>> 4a999a03f4625b2369692668db7cab005398b0f8
 @app.route('/api/v1/queryClass', methods=['POST'])
 def queryClass():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
+    class_id = request.form.get('class_id')[:12] if request.form.get('class_id') else ''
+    grade = request.form.get('grade') if request.form.get('grade') else ''
     year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
     term = request.form.get('term') if request.form.get('term') else '1'
     if (int(student_id[:4]) >= 2015):
         classList = analyse.getClassFor15(student_id, password, year, term)
     else:
-        classList = analyse.getClassFor14(student_id, year, term)
+        classList = analyse.getClassFor14(class_id, year, term, grade)
     data = {
         "status":"",
         "data":{
@@ -188,19 +234,20 @@ def queryClass():
         return json.dumps(data)
     data['status'] = True
     data['data']['class_list'] = classList
-    return json.dumps(classList)
+    return json.dumps(data)
 
 
 @app.route('/api/v1/queryExam', methods=['POST'])
 def queryExam():
-    student_id = request.form.get('student_id')
-    password = request.form.get('password')
+    student_id = request.form.get('student_id') if request.form.get('student_id') else ''
+    password = request.form.get('password') if request.form.get('password') else ''
     year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y', time.localtime(time.time()))) - 1)
     term = request.form.get('term') if request.form.get('term') else '1'
+    class_id = request.form.get('class_id')[:12] if request.form.get('class_id') else ''
     if (int(student_id[:4]) >= 2015):
         examList = analyse.getExamFor15(student_id, password, year, term)
     else:
-        examList = analyse.getExamFor14(student_id, year, term)
+        examList = analyse.getExamFor14(class_id)
     data = {
         "status":"",
         "data":{
@@ -214,6 +261,8 @@ def queryExam():
     data['data']['exam_list'] = examList
     return json.dumps(data)
 
+
+# Todo
 @app.route('/api/v1/queryLib', methods=['POST'])
 def queryLib():
     student_id = request.form.get('student_id')
@@ -231,6 +280,8 @@ def queryLib():
         }
     return json.dumps(data)
 
+
+# Todo
 @app.route('/api/v1/queryEcard', methods=['POST'])
 def queryEcard():
     student_id = request.form.get('student_id')

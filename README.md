@@ -2,6 +2,8 @@
 
 [apiary接口文档](http://docs.schoolservice.apiary.io/)
 
+[gitbook](https://superkevingit.gitbooks.io/skilltree/content/1%E5%A4%A7%E5%AD%A6%E6%A0%A1%E5%9B%AD%E6%9C%8D%E5%8A%A1.html)
+
 ## 实现功能：
 
 * cas跳转登录智慧交大和教务系统
@@ -16,17 +18,13 @@
 
 * 用户信息接口
 
-* 15级成绩,课表，考试安排查询接口
-
-* 14级成绩查询接口
+* 14,15级成绩,课表，考试安排查询接口
 
 ## TODO
 
-* 14级课表, 考试安排接口
-
 * 查饭卡，图书馆接口
 
-* 查询信息缓存
+* 查询信息多级缓存
 
 ## 部署方法
 ``请注意系统权限``
@@ -46,7 +44,7 @@
     
  > 创建数据库
     mysql -u root -p
-    create database ss_ecjtu_tech character set utf8;
+    create database 数据库名 character set utf8;
     修改mysql的my.cnf
     
     [client]
@@ -89,7 +87,7 @@
     
     npm install -g pm2;
     
-    pm2 start app.js --name ss_ecjtu_tech
+    pm2 start app.js --name 进程名称
 
 > cd ..;python deploy.py
 
@@ -117,7 +115,7 @@
 
 > supervisord -c /etc/supervisord.conf
 
-> supervisorctl start ss_ecjtu_tech
+> supervisorctl start 配置名称
 ```
 
 ``option: 开机自动启动 Supervisord``

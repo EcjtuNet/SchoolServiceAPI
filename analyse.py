@@ -55,6 +55,19 @@ def login_lib(username, password):
     return login_cookie
 
 
+# 一卡通
+def login_ecard(username, password):
+    lt = cas.get_ticket_url(headers, login_url)
+    encodeService = ""
+    service = "http://ecard.ecjtu.jx.cn/hdjtdrPortalHome.action"
+    ticket_url = cas.get_ticket_url(headers, login_url, payload,
+                                    encodeService, service,
+                                    username, password, lt)
+    login_cookie = cas.get_login_cookie(ticket_url, headers)
+    return login_cookie
+
+
+# 实时测试密码正确性
 def testPassword(username, password):
     lt = cas.get_lt_value(headers, login_url)
     result = cas.get_ticket_url(config.get('headers'), login_url, payload,
@@ -67,6 +80,7 @@ def testPassword(username, password):
     return result
 
 
+# 存储边缘信息
 def saveStudentInfo(username, password):
     info_url = "http://portal.ecjtu.edu.cn/dcp/profile/profile.action"
     cookies = login_portal(username, password)
@@ -93,7 +107,7 @@ def saveStudentInfo(username, password):
     return user
 
 
-# 获取所有班级名单
+# 获取所有15以后班级名单
 def getStudentList(username, password):
     url = "http://jwxt.ecjtu.jx.cn/infoQuery/class_findClassList.action"
     cookie = login_jwxt(username, password)
@@ -148,7 +162,8 @@ def getStudentList(username, password):
                     User.addUser(info)
     return
 
-# 获取所有14及以前班级名单
+
+# 获取所有14及以前班级名单（不需要使用）
 def get_student_list_for_14():
     url = "http://jwc.ecjtu.jx.cn:8080/jwcmis/stuquery.jsp"
     html = requests.get(url).text
@@ -207,6 +222,7 @@ def get_student_list_for_14():
                         }
     return
 
+
 def getScoreFor15(username, password, year, term):
     cookie = login_jwxt(username, password)
     url = "http://jwxt.ecjtu.jx.cn/scoreQuery/stuScoreQue_getStuScore.action"
@@ -255,6 +271,7 @@ def getScoreFor14(username, year, term):
 
     result = soup.find_all("tr")[2:]
     scoreList = []
+    scoreInfoList = []
     for tr in result:
         td = tr.find_all("td")
         eleList = []
@@ -266,7 +283,17 @@ def getScoreFor14(username, year, term):
                 content = content.encode('gbk').replace('</font>','')
             eleList.append(content)
         scoreList.append(eleList)
-    return scoreList
+
+    for originScoreInfo in scoreList:
+        scoreInfo = {
+            'objectName': originScoreInfo[3],
+            'classRequirement': originScoreInfo[4],
+            'assessment': None,
+            'credit': originScoreInfo[5],
+            'score': originScoreInfo[6]
+        }
+        scoreInfoList.append(scoreInfo)
+    return scoreInfoList
 
 
 def getClassFor15(username, password, year, term):
@@ -283,7 +310,50 @@ def getClassFor15(username, password, year, term):
         originClassInfo = trList[i].find_all('td')
         singleClassInfoList = []
         for j in [1,2,3,4,5,6,7]:
-            singleClassInfo = originClassInfo[j].get_text().replace('</br>','')
+            singleClassInfo = []
+            a = originClassInfo[j].get_text("|", strip=True).split('|')
+            if len(a[0]) > 0:
+                if len(a) < 3:
+                    singleClassInfo = [
+                        {
+                            "class_name": a[0],
+                            "class_teacher": a[1].split(' ')[0],
+                            "class_room": None,
+                            "class_week": a[1].split(' ')[1],
+                            "class_type": None,
+                            "class_time": a[1].split(' ')[2]
+                        }
+                    ]
+                elif len(a) > 3:
+                    singleClassInfo = [
+                        {
+                            "class_name": a[0],
+                            "class_teacher": a[1].split(' ')[0],
+                            "class_room": a[1].split(' ')[1],
+                            "class_week": a[2].split(' ')[0][:-3],
+                            "class_type": a[2].split(' ')[0][-3:-1],
+                            "class_time": a[2].split('  ')[1]
+                        },
+                        {
+                            "class_name": a[3],
+                            "class_teacher": a[4].split(' ')[0],
+                            "class_room": a[4].split(' ')[1],
+                            "class_week": a[5].split(' ')[0][:-3],
+                            "class_type": a[5].split(' ')[0][-3:-1],
+                            "class_time": a[5].split('  ')[1]
+                        }
+                    ]
+                else:
+                    singleClassInfo = [
+                        {
+                        "class_name": a[0],
+                        "class_teacher": a[1].split(' ')[0],
+                        "class_room": a[1].split(' ')[1],
+                        "class_week": a[2].split(' ')[0],
+                        "class_type": None,
+                        "class_time": a[2].split('  ')[1]
+                        }
+                    ]
             singleClassInfoList.append(singleClassInfo)
         classInfoList.append(singleClassInfoList)
     monday,tuesday,wednesday,thursday,friday,saturday,sunday = zip(*classInfoList)
@@ -299,9 +369,60 @@ def getClassFor15(username, password, year, term):
     }
     return classInfo
 
-# Todo
-def getClassFor14(username, year, term):
-    return
+
+def getDepartmentListFor14():
+    html = jwc.fetch_class_page()
+    soup = BeautifulSoup(html, "lxml")
+    departments = soup.find_all("select",{"name": "depart"})[0].find_all("option")
+    depart_list = []
+    for department in departments:
+        depart_list.append({"dep_name": department.string, "dep_value": department["value"]})
+    return depart_list
+
+
+
+def getMajorListFor14(dep_value, grade):
+    html = jwc.fetch_major_list(dep_value, grade)
+    soup = BeautifulSoup(html, "lxml")
+    majors = soup.find_all("select",{"name": "banji"})[0].find_all("option")[1:]
+    major_list = []
+    for major in majors:
+        major_list.append({"major_name": major.string, "major_value": major["value"]})
+    return major_list
+
+
+def getClassFor14(class_id, year, term, grade):
+    html = jwc.fetch_class_list(class_id, year, term, grade)
+    soup = BeautifulSoup(html, "lxml")
+    row_classes_list = soup.find_all("tr")[1:]
+    classInfoList = []
+    for i in [0,1,2,3,4]:
+        originClassInfo = row_classes_list[i].find_all('td')
+        singleClassInfoList = []
+        for j in [1,2,3,4,5,6,7]:
+            a= originClassInfo[j].get_text("|", strip=True).split('|')
+            singleClassInfo = {}
+            if a[0]:
+                singleClassInfo = {
+                    "class_name": a[1],
+                    "class_teacher": a[2].split(' ')[0],
+                    "class_room": a[2].split(' ')[1],
+                    "class_week": a[3].split(' ')[0]
+                }
+            singleClassInfoList.append(singleClassInfo)
+        classInfoList.append(singleClassInfoList)
+    monday,tuesday,wednesday,thursday,friday,saturday,sunday = zip(*classInfoList)
+
+    classInfo = {
+        'monday':monday,
+        'tuesday':tuesday,
+        'wednesday':wednesday,
+        'thursday':thursday,
+        'friday':friday,
+        'saturday':saturday,
+        'sunday':sunday
+    }
+    return classInfo
 
 
 def getExamFor15(username, password, year, term):
@@ -321,22 +442,53 @@ def getExamFor15(username, password, year, term):
         singleExamInfoList = []
         for j in range(8):
             singleExamInfoList = {
-                '课程名称': tdList[1].string,
-                '课程性质': tdList[2].string,
-                '班级名称': tdList[3].string,
-                '学生人数': tdList[4].string,
-                '考试周次': tdList[5].string,
-                '考试时间': tdList[6].string,
-                '考试地点': tdList[7].string
+                'major_name': tdList[1].string,
+                'major_type': tdList[2].string,
+                'class_name': tdList[3].string,
+                'total_student': tdList[4].string,
+                'exam_week': tdList[5].string,
+                'exam_time': tdList[6].string,
+                'exam_place': tdList[7].string,
+                'exam_number': tdList[8].string,
+                'teacher':{
+                    'main_teacher': {'name': None, 'dep': None},
+                    'assist_teacher': {'name': None, 'dep': None}
+                }
             }
         examInfoList.append(singleExamInfoList)
 
     return examInfoList
 
 
-# Todo
-def getExamFor14(username, year, term):
-    return
+def getExamFor14(class_id):
+    html = jwc.get_exam_list(class_id)
+    soup = BeautifulSoup(html, "lxml")
+    table = soup.find_all("table")
+    if len(table) == 1:
+        return 'error'
+    exams = table[1].find_all("tr")
+    examInfoList = []
+    for exam in exams:
+        items = exam.find_all("td")
+        singleExamInfoList = {
+            'major_name': clean_exam(items[1]),
+            'major_type': None,
+            'class_name': clean_exam(items[0]),
+            'total_student': None,
+            'exam_week': clean_exam(items[3]),
+            'exam_time': clean_exam(items[4]),
+            'exam_place': clean_exam(items[5]),
+            'exam_number': None,
+            'teacher': {
+                'main_teacher': {'name': clean_exam(items[6]), 'dep': clean_exam(items[7])},
+                'assist_teacher': {'name': clean_exam(items[8]), 'dep': clean_exam(items[9])},
+            }
+        }
+        examInfoList.append(singleExamInfoList)
+    return examInfoList
+
+def clean_exam(item):
+    return item.find_all("font")[0].string
 
 # Todo
 def getLib(student_id, password):

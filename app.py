@@ -126,7 +126,7 @@ def getInfo():
 def queryScore():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
-    year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y',time.localtime(time.time())) )-1)
+    year = request.form.get('year') if request.form.get('year') else str(int(time.strftime('%Y', time.localtime(time.time())) )-1)
     term = request.form.get('term') if request.form.get('term') else '1'
     if (int(student_id[:4]) >= 2015):
         scoreList = analyse.getScoreFor15(student_id, password, year, term)
@@ -143,6 +143,27 @@ def queryScore():
         return json.dumps(data)
     data['status'] = True
     data['data']['score_list'] = scoreList
+    return json.dumps(data)
+
+
+@app.route('/api/v1/queryTodaySchedule', methods=['POST'])
+def queryTodaySchedule():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    date = request.form.get('date')
+    print student_id, password, date
+    today_class_list_data = analyse.getTodaySchedule(student_id, password, date)
+    data = {
+        "status":"",
+        "data":{
+            "today_class_list":""
+        }
+    }
+    if (today_class_list_data == 'error'):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['today_class_list'] = today_class_list_data
     return json.dumps(data)
 
 

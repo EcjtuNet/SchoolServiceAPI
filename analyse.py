@@ -3,6 +3,7 @@
 from bs4 import BeautifulSoup
 import re
 import json
+import requests
 
 from login import Cas as cas
 from login import Jwc as jwc
@@ -230,6 +231,15 @@ def getScoreFor15(username, password, year, term):
         scoreInfoList.append(scoreInfo)
     return scoreInfoList
 
+
+def getTodaySchedule(username, password, date):
+    cookies = login_jwxt(username, password)
+    todaySchedule_url = 'http://jwxt.ecjtu.jx.cn/Schedule/Weekcalendar_getTodayWeekcalendar.action'
+    todaySchedule_postdata = {'date': date,
+                              'dataType': "json"}
+    schedule_data = requests.post(todaySchedule_url, data=todaySchedule_postdata, cookies=cookies, headers=headers)
+    data = json.loads(schedule_data.text)
+    return data['weekcalendarpojoList']
 
 def getScoreFor14(username, year, term):
     cookies = jwc.score_login()

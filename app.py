@@ -155,13 +155,11 @@ def queryScore():
     return json.dumps(data)
 
 
-<<<<<<< HEAD
 @app.route('/api/v1/queryTodaySchedule', methods=['POST'])
 def queryTodaySchedule():
     student_id = request.form.get('student_id')
     password = request.form.get('password')
     date = request.form.get('date')
-    print student_id, password, date
     today_class_list_data = analyse.getTodaySchedule(student_id, password, date)
     data = {
         "status":"",
@@ -177,7 +175,25 @@ def queryTodaySchedule():
     return json.dumps(data)
 
 
-=======
+@app.route('/api/v1/queryLittleClassIndex', methods=['POST'])
+def queryLittleClassIndex():
+    student_id = request.form.get('student_id')
+    password = request.form.get('password')
+    little_class_index_data = analyse.getLittleClassIndex(student_id, password)
+    data = {
+        "status": "",
+        "data": {
+            "little_class_index": ""
+        }
+    }
+    if (little_class_index_data == 'error'):
+        data['status'] = False
+        return json.dumps(data)
+    data['status'] = True
+    data['data']['little_class_index'] = little_class_index_data
+    return json.dumps(data)
+
+
 @app.route('/api/v1/queryDepartment', methods=['GET'])
 def queryDepartment():
     dep_list = analyse.getDepartmentListFor14()
@@ -210,7 +226,7 @@ def queryMajor():
     data['data']['major_list'] = major_list
     return json.dumps(data)
 
->>>>>>> 4a999a03f4625b2369692668db7cab005398b0f8
+
 @app.route('/api/v1/queryClass', methods=['POST'])
 def queryClass():
     student_id = request.form.get('student_id')

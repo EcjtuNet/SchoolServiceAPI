@@ -257,6 +257,24 @@ def getTodaySchedule(username, password, date):
     data = json.loads(schedule_data.text)
     return data['weekcalendarpojoList']
 
+
+def getLittleClassIndex(username, password):
+    cookie = login_jwxt(username, password)
+    url = "http://jwxt.ecjtu.jx.cn/infoQuery/XKStu_findTerm.action"
+    html = cas.page_by_get(cookie, headers, url)
+    soup = BeautifulSoup(html, "html.parser")
+    xbxh_data = []
+    for item in soup.find_all('tr')[1:]:
+        xbxh_data_item = {}
+        data = item.find_all('td')
+
+        xbxh_data_item['teacher'] = data[9].text
+        xbxh_data_item['class_name'] = data[11].text
+        xbxh_data_item['class_index'] = data[12].text
+        xbxh_data.append(xbxh_data_item)
+    return xbxh_data
+
+
 def getScoreFor14(username, year, term):
     cookies = jwc.score_login()
     html = jwc.fetch_score(username, cookies, year, term)
@@ -332,7 +350,7 @@ def getClassFor15(username, password, year, term):
                             "class_room": a[1].split(' ')[1],
                             "class_week": a[2].split(' ')[0][:-3],
                             "class_type": a[2].split(' ')[0][-3:-1],
-                            "class_time": a[2].split('  ')[1]
+                            "class_time": a[2].split(' ')[1]
                         },
                         {
                             "class_name": a[3],
@@ -340,7 +358,7 @@ def getClassFor15(username, password, year, term):
                             "class_room": a[4].split(' ')[1],
                             "class_week": a[5].split(' ')[0][:-3],
                             "class_type": a[5].split(' ')[0][-3:-1],
-                            "class_time": a[5].split('  ')[1]
+                            "class_time": a[5].split(' ')[1]
                         }
                     ]
                 else:
@@ -351,7 +369,7 @@ def getClassFor15(username, password, year, term):
                         "class_room": a[1].split(' ')[1],
                         "class_week": a[2].split(' ')[0],
                         "class_type": None,
-                        "class_time": a[2].split('  ')[1]
+                        "class_time": a[2].split(' ')[1]
                         }
                     ]
             singleClassInfoList.append(singleClassInfo)

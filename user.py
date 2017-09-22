@@ -43,7 +43,7 @@ class User(BaseModel):
 
     @classmethod
     def addUser(cls, info):
-        cls.create(
+        u = cls.create(
             department=info['department'],
             grade=info['grade'],
             major=info['major'],
@@ -55,6 +55,7 @@ class User(BaseModel):
             card_id=info['card_id'],
             student_status=info['student_status']
         )
+        return u
 
 
     @classmethod
@@ -80,8 +81,8 @@ class User(BaseModel):
         if u is not None:
             return u
         else:
-            cls.addUser(info)
-            return cls.select().where(cls.student_id == student_id).get()
+            return cls.addUser(info)
+
 
     @classmethod
     def getInfo(cls, student_id, password):

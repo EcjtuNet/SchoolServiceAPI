@@ -102,8 +102,15 @@ def saveStudentInfo(username, password):
     if (all_info == 'error'):
         return 'error'
     info = json.loads(all_info)['list'][0]['map']
-    user = User.saveInfo(username, info.get('CARD_ID', ''),
-                         info.get('BIRTHDAY', ''), info.get('MOBILE', ''))
+    save_info = {
+        'department': info.get('UNIT_NAME', ''),
+        'name': info.get('USER_NAME', ''),
+        'sex': info.get('SEX_NAME', ''),
+        'student_id': info.get('ID_NUMBER', ''),
+        'mobile': info.get('MOBILE', ''),
+        'card_id': info.get('CARD_ID', '')
+    }
+    user = User.saveInfo(username, save_info)
     return user
 
 

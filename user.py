@@ -28,7 +28,7 @@ class User(BaseModel):
     major = CharField(null=True)
     sex = CharField(null=True)
     class_id = CharField(null=True)
-    cas_id = CharField(null=True)
+    # cas_id = CharField(null=True)
     student_status = CharField(null=True)
     card_id = CharField(null=True)
     ecard_id = CharField(null=True)
@@ -51,6 +51,8 @@ class User(BaseModel):
             sex=info['sex'],
             class_id=info['class_id'],
             student_id=info['student_id'],
+            mobile=info['mobile'],
+            card_id=info['card_id'],
             student_status=info['student_status']
         )
 
@@ -73,14 +75,13 @@ class User(BaseModel):
 
 
     @classmethod
-    def saveInfo(cls, student_id, card_id, birthday, mobile):
-        u = cls.select().where(cls.student_id==student_id)
-        for n in u:
-            n.card_id = card_id
-            n.birthday = birthday
-            n.mobile = mobile
-            n.save()
-            return n
+    def saveInfo(cls, student_id, info):
+        u = cls.select().where(cls.student_id == student_id).get()
+        if u is not None:
+            return u
+        else:
+            cls.addUser(info)
+            return cls.select().where(cls.student_id == student_id).get()
 
     @classmethod
     def getInfo(cls, student_id, password):

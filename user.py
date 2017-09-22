@@ -77,10 +77,10 @@ class User(BaseModel):
 
     @classmethod
     def saveInfo(cls, student_id, info):
-        u = cls.select().where(cls.student_id == student_id).get()
-        if u is not None:
+        try:
+            u = cls.select().where(cls.student_id == student_id).get()
             return u
-        else:
+        except DatabaseError:
             return cls.addUser(info)
 
 

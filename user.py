@@ -51,8 +51,6 @@ class User(BaseModel):
             sex=info['sex'],
             class_id=info['class_id'],
             student_id=info['student_id'],
-            mobile=info['mobile'],
-            card_id=info['card_id'],
             student_status=info['student_status']
         )
         return u
@@ -80,8 +78,19 @@ class User(BaseModel):
         try:
             u = cls.select().where(cls.student_id == student_id).get()
             return u
-        except DatabaseError:
-            return cls.addUser(info)
+        except:
+            return cls.create(
+                mobile=info['mobile'],
+                card_id=info['card_id'],
+                department=info['department'],
+                name=info['name'],
+                sex=info['sex'],
+                student_id=info['student_id'],
+                grade='',
+                major='',
+                class_id='',
+                student_status=''
+            )
 
 
     @classmethod
